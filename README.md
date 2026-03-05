@@ -8,21 +8,14 @@ The goal is to make it stable and more compatible with the old Torque Game Engin
 
 In OGE3D Folder:
 ```
+git submodule update --init --recursive
 cmake -S . -B Projects/Demo -DTORQUE_APP_NAME=Demo
-cp -r Templates/basicgame Projects/Demo/game/
-cp -r Templates/main.cs Projects/Demo/game/
-cd Projects/Demo/game/
-git clone https://github.com/ohmtal/core.git
-git clone https://github.com/ohmtal/shaders.git
-git clone https://github.com/ohmtal/tools.git
-cd ..
+cd Projects/Demo/
 make -j$(nproc)
 cd game
 ./Demo_Linux_Debug.bin
 ```
-note: if you are not using bash: replace -j$(nproc) with -j[number of processors] 
-
-
+note: if you are not using bash: replace -j$(nproc) with -j[number of processors] -j8 for example.
 
 
 ``` KDevelop config example for Project Demo:

@@ -24,6 +24,7 @@
    canSave = "1";
    canSaveDynamicFields = "1";
    UseMouseMovement = "1";
+   MouseMovementMultiplier = "0.1000000015";
    LockMouseToWindow = "0";
    EdgeMouseMovement = "0";
    EnableDragSelect = "1";
@@ -36,7 +37,7 @@
       noCursor = "0";
 
    new GuiBitmapCtrl(centerPrintDlg) {
-      bitmap = "~/art/gui/hudfill.png";
+      bitmap = "minimal3D/art/gui/hudfill.png";
       color = "255 255 255 255";
       wrap = "0";
       position = "237 374";
@@ -76,7 +77,7 @@
       };
    };
    new GuiBitmapCtrl(bottomPrintDlg) {
-      bitmap = "~/art/gui/hudfill.png";
+      bitmap = "minimal3D/art/gui/hudfill.png";
       color = "255 255 255 255";
       wrap = "0";
       position = "237 719";
@@ -116,7 +117,7 @@
       };
    };
    new GuiBitmapCtrl(LagIcon) {
-      bitmap = "~/art/gui/lagIcon.png";
+      bitmap = "minimal3D/art/gui/lagIcon.png";
       color = "255 255 255 255";
       wrap = "0";
       position = "572 3";
@@ -135,37 +136,8 @@
       canSave = "1";
       canSaveDynamicFields = "0";
    };
-   new GuiCrossHairHud(Reticle) {
-      ObjectDistance = "20";
-      Allow3thperson = "1";
-      ShapenameEnable = "1";
-      DamageBarEnable = "0";
-      textColor = "0 1 0 1";
-      labelPadding = "0 0";
-      damageFillColor = "0 1 0 1";
-      damageFrameColor = "1 0.6 0 1";
-      damageRect = "50 4";
-      damageOffset = "0 10";
-      bitmap = "~/art/gui/weaponHud/crossHair.png";
-      color = "255 255 255 255";
-      wrap = "0";
-      position = "472 344";
-      extent = "80 80";
-      minExtent = "8 8";
-      horizSizing = "center";
-      vertSizing = "center";
-      profile = "GuiModelessDialogProfile";
-      visible = "1";
-      active = "1";
-      tooltipProfile = "GuiToolTipProfile";
-      hovertime = "1000";
-      isContainer = "0";
-      locked = "1";
-      canSave = "1";
-      canSaveDynamicFields = "0";
-   };
    new GuiBitmapCtrl(OOBSign) {
-      bitmap = "~/art/gui/playHud/missionAreaWarning.png";
+      bitmap = "minimal3D/art/gui/playHud/missionAreaWarning.png";
       color = "255 255 255 255";
       wrap = "0";
       position = "512 693";
@@ -203,6 +175,8 @@
       TextLayer = "0";
       ImageAlign = "0";
       BaseExtent = "1280 1024";
+      ScaleContent = "0";
+      MousePassThru = "0";
    };
    new OhmShapeNameHud(myShapenameHud) {
       fillColor = "0 0 0 0";
@@ -242,7 +216,7 @@
       minExtent = "8 2";
       horizSizing = "width";
       vertSizing = "height";
-      profile = "ShapeNameHudProfile";
+      profile = "GuiDefaultProfile";
       visible = "1";
       active = "1";
       tooltipProfile = "GuiToolTipProfile";
