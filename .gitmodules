@@ -1,0 +1,9 @@
+[submodule "Projects/Demo/game/tools"]
+	path = Projects/Demo/game/tools
+	url = https://github.com/ohmtal/tools.git
+[submodule "Projects/Demo/game/core"]
+	path = Projects/Demo/game/core
+	url = https://github.com/ohmtal/core.git
+[submodule "Projects/Demo/game/shaders"]
+	path = Projects/Demo/game/shaders
+	url = https://github.com/ohmtal/shaders.git

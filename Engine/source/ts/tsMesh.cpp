@@ -1518,7 +1518,14 @@ void TSSkinMesh::render(   TSMaterialList *materials,
    AssertFatal((TSShape::smUseHardwareSkinning && vertexBuffer == mVB) || (!TSShape::smUseHardwareSkinning), "Vertex buffer mismatch");
 
    // render...
-   innerRender(materials, rdata, vertexBuffer, mPB, meshName);
+   //XXTH segfault hunt
+   if (materials && mPB) {
+      innerRender(materials, rdata, vertexBuffer, mPB, meshName);
+   } else {
+      //SPAM!!
+         // Con::errorf("material is 0x0!!!");
+   }
+
 }
 
 bool TSSkinMesh::buildPolyList( S32 frame, AbstractPolyList *polyList, U32 &surfaceKey, TSMaterialList *materials )

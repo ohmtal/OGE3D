@@ -576,7 +576,17 @@ void TSShapeInstance::render( const TSRenderState &rdata, S32 dl, F32 intraDL )
       TSRenderState objState = rdata;
       // following line is handy for debugging, to see what part of the shape that it is rendering
       const char *name = mShape->names[ mMeshObjects[i].object->nameIndex ];
-      mMeshObjects[i].render( od, *realBuffer, mMaterialList, objState, mAlphaAlways ? mAlphaAlwaysValue : 1.0f, name );
+      //XXTH
+      if (mMaterialList != nullptr) {
+            mMeshObjects[i].render( od, *realBuffer, mMaterialList, objState, mAlphaAlways ? mAlphaAlwaysValue : 1.0f, name );
+      } else {
+            static bool bugPushed = false;
+            if (! bugPushed ) {
+                  Con::errorf("BUG: 260305 TSShapeInstance::render - materialList is nullptr!!");
+                  bugPushed = true;
+            }
+      }
+
    }
 }
 

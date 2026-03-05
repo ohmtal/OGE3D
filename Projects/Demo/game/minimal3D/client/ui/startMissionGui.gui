@@ -1,0 +1,372 @@
+//--- OBJECT WRITE BEGIN ---
+%guiContent = new GuiChunkedBitmapCtrl(startMissionGui) {
+   bitmap = "./background";
+   useVariable = "0";
+   tile = "0";
+   position = "0 0";
+   extent = "1024 768";
+   minExtent = "8 8";
+   horizSizing = "width";
+   vertSizing = "height";
+   profile = "GuiDefaultProfile";
+   visible = "1";
+   active = "1";
+   tooltipProfile = "GuiToolTipProfile";
+   hovertime = "1000";
+   isContainer = "1";
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      helpTag = "0";
+
+   new GuiControl() {
+      position = "193 230";
+      extent = "637 308";
+      minExtent = "8 8";
+      horizSizing = "center";
+      vertSizing = "center";
+      profile = "GuiWindowProfile";
+      visible = "1";
+      active = "1";
+      tooltipProfile = "GuiToolTipProfile";
+      hovertime = "1000";
+      isContainer = "1";
+      canSave = "1";
+      canSaveDynamicFields = "0";
+
+      new GuiTextCtrl() {
+         text = "Select Mission:";
+         maxLength = "255";
+         margin = "0 0 0 0";
+         padding = "0 0 0 0";
+         anchorTop = "1";
+         anchorBottom = "0";
+         anchorLeft = "1";
+         anchorRight = "0";
+         position = "12 36";
+         extent = "72 18";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiTextProfile";
+         visible = "1";
+         active = "1";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "1";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiCheckBoxCtrl(ML_isMultiplayer) {
+         text = "Host Multiplayer";
+         groupNum = "-1";
+         buttonType = "ToggleButton";
+         useMouseEvents = "0";
+         position = "155 272";
+         extent = "147 23";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiCheckBoxProfile";
+         visible = "1";
+         active = "1";
+         variable = "pref::HostMultiPlayer";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "0";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiButtonCtrl() {
+         text = "Launch Mission!";
+         groupNum = "-1";
+         buttonType = "PushButton";
+         useMouseEvents = "0";
+         position = "320 271";
+         extent = "127 23";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiButtonProfile";
+         visible = "1";
+         active = "1";
+         command = "SM_StartMission();";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "0";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiScrollCtrl() {
+         willFirstRespond = "1";
+         hScrollBar = "dynamic";
+         vScrollBar = "alwaysOn";
+         lockHorizScroll = "0";
+         lockVertScroll = "0";
+         constantThumbHeight = "0";
+         childMargin = "0 0";
+         mouseWheelScrollSpeed = "-1";
+         margin = "0 0 0 0";
+         padding = "0 0 0 0";
+         anchorTop = "1";
+         anchorBottom = "0";
+         anchorLeft = "1";
+         anchorRight = "0";
+         position = "10 62";
+         extent = "436 200";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiScrollProfile";
+         visible = "1";
+         active = "1";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "1";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+
+         new GuiTextListCtrl(SM_missionList) {
+            columns = "0";
+            fitParentWidth = "1";
+            clipColumnText = "0";
+            position = "1 1";
+            extent = "421 416";
+            minExtent = "8 8";
+            horizSizing = "right";
+            vertSizing = "bottom";
+            profile = "GuiTextArrayProfile";
+            visible = "1";
+            active = "1";
+            tooltipProfile = "GuiToolTipProfile";
+            hovertime = "1000";
+            isContainer = "1";
+            canSave = "1";
+            canSaveDynamicFields = "0";
+         };
+      };
+      new GuiTextEditCtrl() {
+         historySize = "0";
+         tabComplete = "0";
+         sinkAllKeyEvents = "0";
+         password = "0";
+         passwordMask = "*";
+         maxLength = "255";
+         margin = "0 0 0 0";
+         padding = "0 0 0 0";
+         anchorTop = "1";
+         anchorBottom = "0";
+         anchorLeft = "1";
+         anchorRight = "0";
+         position = "98 15";
+         extent = "134 18";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiTextEditProfile";
+         visible = "1";
+         active = "1";
+         variable = "pref::Player::Name";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "1";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiTextCtrl() {
+         text = "Player Name:";
+         maxLength = "255";
+         margin = "0 0 0 0";
+         padding = "0 0 0 0";
+         anchorTop = "1";
+         anchorBottom = "0";
+         anchorLeft = "1";
+         anchorRight = "0";
+         position = "12 11";
+         extent = "63 18";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiTextProfile";
+         visible = "1";
+         active = "1";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "1";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiButtonCtrl() {
+         text = "<< Back";
+         groupNum = "-1";
+         buttonType = "PushButton";
+         useMouseEvents = "0";
+         position = "10 272";
+         extent = "127 23";
+         minExtent = "8 8";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiButtonProfile";
+         visible = "1";
+         active = "1";
+         command = "Canvas.setContent(mainMenuGui);";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "0";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiBitmapCtrl(MissionPreView) {
+         bitmap = "levels/empty_preview.png";
+         color = "255 255 255 255";
+         wrap = "0";
+         position = "456 71";
+         extent = "172 109";
+         minExtent = "8 2";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "GuiDefaultProfile";
+         visible = "1";
+         active = "1";
+         tooltipProfile = "GuiToolTipProfile";
+         hovertime = "1000";
+         isContainer = "0";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+      new GuiTextCtrl(txtMissionName) {
+         text = "st_archMesa";
+         maxLength = "1024";
+         margin = "0 0 0 0";
+         padding = "0 0 0 0";
+         anchorTop = "1";
+         anchorBottom = "0";
+         anchorLeft = "1";
+         anchorRight = "0";
+         position = "465 195";
+         extent = "161 64";
+         minExtent = "8 2";
+         horizSizing = "right";
+         vertSizing = "bottom";
+         profile = "Arial24White";
+         visible = "1";
+         active = "1";
+         tooltipProfile = "Arial24White";
+         hovertime = "1000";
+         isContainer = "1";
+         canSave = "1";
+         canSaveDynamicFields = "0";
+      };
+   };
+};
+//--- OBJECT WRITE END ---
+//----------------------------------------
+error("client/ui/startMissionGui => FIXME MINIMAL .... copied from auteria port ");
+
+//----------------------------------------
+function SM_StartMission()
+{
+   %id = SM_missionList.getSelectedId();
+   %mission = getField(SM_missionList.getRowTextById(%id), 1);
+
+   if ($pref::HostMultiPlayer)
+      %serverType = "MultiPlayer";
+   else
+      %serverType = "SinglePlayer";
+
+   createServer(%serverType, %mission);
+   $pref::LastMission = %mission;
+   %conn = new GameConnection(ServerConnection);
+   RootGroup.add(ServerConnection);
+//XXTH_HUDLE
+   //1.99 function GameConnection::onConnectRequest( %client, %netAddress, %name, %password, %cmd, %email, %playerbase, %skinname, %version, %OS, %p6 )
+   %conn.setConnectArgs($pref::Player::Name, HUDLE_set($Client::Password),"LOGIN_SM", "","","", getVersionNumber(), $platform SPC $platformUnixType);
+   
+   //%md5pwd = getMD5($Client::Password);
+   //%conn.setConnectArgs($pref::Player::Name, %md5pwd,"LOGIN_SM", getVersionNumber(), $platform SPC $platformUnixType);
+   //XXTH NOT USED (Pref::Server::Password) %conn.setJoinPassword(%md5pwd);
+   %conn.connectLocal();
+   
+}
+
+
+//----------------------------------------
+function startMissionGui::onWake()
+{
+   SM_missionList.clear();
+   %i = 0;
+   for(%file = findFirstFile($Server::MissionFileSpec); %file !$= ""; %file = findNextFile($Server::MissionFileSpec))  
+      if (strStr(%file, "/CVS/") == -1)
+         SM_missionList.addRow(%i++, getMissionDisplayName(%file) @ "\t" @ %file );
+   SM_missionList.sort(0);
+   SM_missionList.setSelectedRow(0);
+   SM_missionList.scrollVisible(0);
+}   
+
+
+//----------------------------------------
+function getMissionDisplayName( %missionFile ) 
+{
+//FIXME 
+  return fileBase(%missionFile); 
+     
+   
+   
+   %file = new FileObject();
+   
+   %MissionInfoObject = "";
+   
+   if ( %file.openForRead( %missionFile ) ) {
+		%inInfoBlock = false;
+		
+		while ( !%file.isEOF() ) {
+			%line = %file.readLine();
+			%line = trim( %line );
+			
+			if( %line $= "new LevelInfo(theLevelInfo) {" )
+				%inInfoBlock = true;
+			else if( %inInfoBlock && %line $= "};" ) {
+				%inInfoBlock = false;
+				%MissionInfoObject = %MissionInfoObject @ %line; 
+				break;
+			}
+			
+			if( %inInfoBlock )
+			   %MissionInfoObject = %MissionInfoObject @ %line @ " "; 	
+		}
+		
+		%file.close();
+	}
+	
+	
+	%MissionInfoObject = "%MissionInfoObject = " @ %MissionInfoObject;
+	eval( %MissionInfoObject );
+	
+   %file.delete();
+
+   if( %MissionInfoObject.LevelName !$= "" )
+      return %MissionInfoObject.LevelName;
+   else
+      return fileBase(%missionFile); 
+}
+//----------------------------------------
+function SM_missionList::onSelect(%this, %cellId, %text)
+{
+echo("PARAMS: " SPC %cellId SPC %text SPC %dummy);   
+   
+   %mission = getField(%this.getRowTextById(%cellId), 1);
+   
+   %imageName = filePath(%mission) @ "/" @ fileBase(%mission) @ "_preview.png";
+
+   txtMissionName.Text= getField(%this.getRowTextById(%cellId), 0);  
+   
+    if (isFile(%imageName))
+    {
+       MissionPreView.setBitMap(%imageName);
+    } else {
+        MissionPreView.setBitMap();
+    }
+   
+   //echo("LEVEL IS:" SPC %level SPC "MISSION IS:" SPC %mission);   
+   
+
+}

@@ -838,6 +838,8 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
       inline bool getIsEnvCacheClientObject() {
          return mIsEnvCacheClientObject; 
       }
+#else
+      inline bool getIsEnvCacheClientObject() { return false; }
 #endif
 
 

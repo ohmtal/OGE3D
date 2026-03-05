@@ -337,6 +337,7 @@ ShapeBaseData::~ShapeBaseData()
 
 bool ShapeBaseData::preload(bool server, String &errorStr)
 {
+
    if (!Parent::preload(server, errorStr))
       return false;
    bool shapeError = false;
@@ -1275,6 +1276,15 @@ bool ShapeBase::onAdd()
          getId(), getClassName(), getName() );
       return false;
    }
+
+   if (isClientObject() &&   getIsEnvCacheClientObject() )
+   {
+      String errorStr = "";
+      if (!mDataBlock->preload(false, errorStr)) {
+            Con::errorf("Error loading cached shape %s", errorStr.c_str());
+      }
+   }
+
 
    // Resolve sounds that arrived in the initial update
    S32 i;
@@ -3148,7 +3158,7 @@ void ShapeBase::prepBatchRender(SceneRenderState* state, S32 mountedImageIndex )
    {
       MountedImage& image = mMountedImageList[mountedImageIndex];
 
-      if( image.dataBlock && image.shapeInstance )
+      if( image.dataBlock && image.shapeInstance[0] != nullptr )
       {
          renderMountedImage( mountedImageIndex, rdata, state );
       }
