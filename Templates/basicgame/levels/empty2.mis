@@ -1,0 +1,94 @@
+//--- OBJECT WRITE BEGIN ---
+new Scene(MissionGroup) {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+   isSubscene = "0";
+   isEditing = "0";
+   isDirty = "0";
+      cdTrack = "2";
+      CTF_scoreLimit = "5";
+      enabled = "1";
+      musicTrack = "lush";
+
+   new LevelInfo(theLevelInfo) {
+      nearClip = "0.1";
+      visibleDistance = "1000";
+      visibleGhostDistance = "150";
+      decalBias = "0.0015";
+      fogColor = "0.863157 0.745404 0.64448 1";
+      fogDensity = "0.02";
+      fogDensityOffset = "500";
+      fogAtmosphereHeight = "150";
+      canvasClearColor = "0 0 0 255";
+      ambientLightBlendPhase = "1";
+      ambientLightBlendCurve = "0 0 -1 -1";
+      advancedLightmapSupport = "0";
+      soundAmbience = "AudioAmbienceDefault";
+      soundDistanceModel = "Linear";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         desc0 = "pseudo instances ......";
+         enabled = "1";
+         levelName = "InstanceServer";
+   };
+   new MissionArea() {
+      area = "-64 -64 128 128";
+      flightCeiling = "2000";
+      flightCeilingRange = "50";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new SimGroup(PlayerDropPoints) {
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         enabled = "1";
+
+      new SpawnSphere() {
+         autoSpawn = "0";
+         spawnTransform = "0";
+         radius = "5";
+         sphereWeight = "1";
+         indoorWeight = "1";
+         outdoorWeight = "1";
+         isAIControlled = "0";
+         dataBlock = "SpawnSphereMarker";
+         position = "-10000 -10000 30";
+         rotation = "1 0 0 0";
+         scale = "1 1 1";
+         canSave = "1";
+         canSaveDynamicFields = "1";
+            enabled = "1";
+            EnvCacheClientObject = "0";
+            homingCount = "0";
+            lockCount = "0";
+      };
+   };
+   new SimGroup(InstanceGrp) {
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new SimGroup(CameraBookmarks) {
+      canSave = "1";
+      canSaveDynamicFields = "1";
+
+      new CameraBookmark() {
+         isAIControlled = "0";
+         dataBlock = "CameraBookmarkMarker";
+         position = "0 0 0";
+         rotation = "1 0 0 0";
+         scale = "1 1 1";
+         internalName = "NewCamera_0";
+         canSave = "1";
+         canSaveDynamicFields = "1";
+      };
+   };
+   new Prefab() {
+      fileName = "basicgame/levels/Instance1.prefab";
+      position = "-10000 -10000 30";
+      rotation = "1 0 0 0";
+      scale = "1 1 1";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+};
+//--- OBJECT WRITE END ---
