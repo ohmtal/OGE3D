@@ -518,7 +518,7 @@ if(TORQUE_DEDICATED)
 endif()
 
 #modules dir
-file(GLOB modules "modules/*.cmake")
+file(GLOB modules "${cmakeDir}/modules/*.cmake")
 foreach(module ${modules})
 	include(${module})
 endforeach()
@@ -596,7 +596,9 @@ endif()
 
 ###############################################################################
 ###############################################################################
-finishExecutable()
+if(NOT OGE3D_DELAY_FINISH)
+    finishExecutable()
+endif()
 ###############################################################################
 ###############################################################################
 
@@ -630,8 +632,8 @@ endif()
 if(NOT EXISTS "${projectOutDir}/${PROJECT_NAME}.torsion")
     CONFIGURE_FILE("${cmakeDir}/template.torsion.in" "${projectOutDir}/${PROJECT_NAME}.torsion")
 endif()
-if(EXISTS "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/game/main.cs.in")
-    CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/game/main.cs.in" "${projectOutDir}/main.cs")
+if(EXISTS "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/game/main.cs.in")
+    CONFIGURE_FILE("${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/game/main.cs.in" "${projectOutDir}/main.cs")
 endif()
 if(WIN32)
     if(NOT EXISTS "${projectSrcDir}/torque.rc")
@@ -855,24 +857,25 @@ if(WIN32)
     set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY INCLUDE_DIRECTORIES $ENV{DXSDK_DIR}/Include)
 endif()
 
-if(MSVC)
-    # Match projectGenerator naming for executables
-    set(OUTPUT_CONFIG DEBUG MINSIZEREL RELWITHDEBINFO)
-    set(OUTPUT_SUFFIX DEBUG MINSIZE    OPTIMIZEDDEBUG)
-    foreach(INDEX RANGE 2)
-        list(GET OUTPUT_CONFIG ${INDEX} CONF)
-        list(GET OUTPUT_SUFFIX ${INDEX} SUFFIX)
-        set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME_${CONF} ${PROJECT_NAME}_${SUFFIX})
-    endforeach()
-    
-else()
-#XXTH added OS AND DEBUG
-    if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-        set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_SYSTEM_NAME}_${CMAKE_BUILD_TYPE}.bin")
+if(TARGET ${PROJECT_NAME})
+    if(MSVC)
+        # Match projectGenerator naming for executables
+        set(OUTPUT_CONFIG DEBUG MINSIZEREL RELWITHDEBINFO)
+        set(OUTPUT_SUFFIX DEBUG MINSIZE    OPTIMIZEDDEBUG)
+        foreach(INDEX RANGE 2)
+            list(GET OUTPUT_CONFIG ${INDEX} CONF)
+            list(GET OUTPUT_SUFFIX ${INDEX} SUFFIX)
+            set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME_${CONF} ${PROJECT_NAME}_${SUFFIX})
+        endforeach()
+        
     else()
-        set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_SYSTEM_NAME}.bin")
+    #XXTH added OS AND DEBUG
+        if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+            set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_SYSTEM_NAME}_${CMAKE_BUILD_TYPE}.bin")
+        else()
+            set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}_${CMAKE_SYSTEM_NAME}.bin")
+        endif()
     endif()
-
 endif()
 
 ###############################################################################
@@ -887,18 +890,18 @@ include(${TORQUE_APP_DIR}/${PROJECT_NAME}.cmake OPTIONAL)
 
 if(TORQUE_TEMPLATE)
     message("Prepare Template(${TORQUE_TEMPLATE}) install...")
-    file(GLOB_RECURSE INSTALL_FILES_AND_DIRS "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/game/*")
+    file(GLOB_RECURSE INSTALL_FILES_AND_DIRS "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/game/*")
 
     foreach(ITEM ${INSTALL_FILES_AND_DIRS})
         get_filename_component( dir ${ITEM} DIRECTORY )
-        STRING(REGEX REPLACE "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/" "${TORQUE_APP_DIR}/" INSTALL_DIR ${dir})
+        STRING(REGEX REPLACE "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/" "${TORQUE_APP_DIR}/" INSTALL_DIR ${dir})
         install( FILES ${ITEM} DESTINATION ${INSTALL_DIR} )
     endforeach()
 
     if(WIN32)
-        INSTALL(FILES "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/cleanShaders.bat"     DESTINATION "${TORQUE_APP_DIR}")
-        INSTALL(FILES "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/DeleteCachedDTSs.bat" DESTINATION "${TORQUE_APP_DIR}")
-        INSTALL(FILES "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/DeleteDSOs.bat"       DESTINATION "${TORQUE_APP_DIR}")
-        INSTALL(FILES "${CMAKE_SOURCE_DIR}/Templates/${TORQUE_TEMPLATE}/DeletePrefs.bat"      DESTINATION "${TORQUE_APP_DIR}")
+        INSTALL(FILES "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/cleanShaders.bat"     DESTINATION "${TORQUE_APP_DIR}")
+        INSTALL(FILES "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/DeleteCachedDTSs.bat" DESTINATION "${TORQUE_APP_DIR}")
+        INSTALL(FILES "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/DeleteDSOs.bat"       DESTINATION "${TORQUE_APP_DIR}")
+        INSTALL(FILES "${OGE3D_DIR}/Templates/${TORQUE_TEMPLATE}/DeletePrefs.bat"      DESTINATION "${TORQUE_APP_DIR}")
     endif()
 endif()

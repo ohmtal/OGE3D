@@ -44,7 +44,7 @@ note: if you are not using bash: replace -j$(nproc) with -j[number of processors
     - [ ] I used a pre 4.0 version of 3.10 development version when i pulled it years ago and there a still fragments like the assets handling which can be removed. 
     - [ ] remove DirectX so I can concentrate on OpenGL and maybe later add Vulcan. 
     - [ ] optional: collada is deprecated. 
-    - [ ] adding gltf 
+    - [ ] adding gltf (https://github.com/KhronosGroup/glTF-Sample-Models/tree/main)
 - [ ] imgui would be cool but a lot of work to add the torque script bindings 
 - [ ] the new Torque3D Torque Script code would be cool but last time (2023) i tried to port it i cancled. 
 - [ ] evaluate emscripten support 

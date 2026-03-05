@@ -28,11 +28,15 @@ elseif( CMAKE_CXX_SIZEOF_DATA_PTR EQUAL 4 )
     set( TORQUE_CPU_X32 ON )
 endif()
 
+if(NOT OGE3D_DIR)
+    set(OGE3D_DIR "${CMAKE_SOURCE_DIR}")
+endif()
+
 if(NOT TORQUE_TEMPLATE)
     set(TORQUE_TEMPLATE "BasicGame" CACHE STRING "the template to use")
 endif()
 if(NOT TORQUE_APP_DIR)
-    set(TORQUE_APP_DIR "${CMAKE_SOURCE_DIR}/Projects/${TORQUE_APP_NAME}")
+    set(TORQUE_APP_DIR "${OGE3D_DIR}/Projects/${TORQUE_APP_NAME}")
 endif()
 if(NOT projectOutDir)
     set(projectOutDir "${TORQUE_APP_DIR}/game")
@@ -40,9 +44,9 @@ endif()
 if(NOT projectSrcDir)
     set(projectSrcDir "${TORQUE_APP_DIR}/source")
 endif()
-set(libDir        "${CMAKE_SOURCE_DIR}/Engine/lib")
-set(srcDir        "${CMAKE_SOURCE_DIR}/Engine/source")
-set(cmakeDir      "${CMAKE_SOURCE_DIR}/Tools/CMake")
+set(libDir        "${OGE3D_DIR}/Engine/lib")
+set(srcDir        "${OGE3D_DIR}/Engine/source")
+set(cmakeDir      "${OGE3D_DIR}/Tools/CMake")
 
 # hide some things
 mark_as_advanced(CMAKE_INSTALL_PREFIX)
@@ -152,8 +156,8 @@ endmacro()
 macro(addLib libs)
    foreach(lib ${libs})
         # check if we can build it ourselfs
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
-            addLibSrc("${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
+        if(EXISTS "${cmakeDir}/libraries/${lib}.cmake")
+            addLibSrc("${cmakeDir}/libraries/${lib}.cmake")
         endif()
         # then link against it
         # two possibilities: a) target already known, so add it directly, or b) target not yet known, so add it to its cache
@@ -169,8 +173,8 @@ endmacro()
 macro(addLibRelease libs)
    foreach(lib ${libs})
         # check if we can build it ourselfs
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
-            addLibSrc("${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
+        if(EXISTS "${cmakeDir}/libraries/${lib}.cmake")
+            addLibSrc("${cmakeDir}/libraries/${lib}.cmake")
         endif()
         # then link against it
         # two possibilities: a) target already known, so add it directly, or b) target not yet known, so add it to its cache
@@ -186,8 +190,8 @@ endmacro()
 macro(addLibDebug libs)
    foreach(lib ${libs})
         # check if we can build it ourselfs
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
-            addLibSrc("${CMAKE_CURRENT_SOURCE_DIR}/libraries/${lib}.cmake")
+        if(EXISTS "${cmakeDir}/libraries/${lib}.cmake")
+            addLibSrc("${cmakeDir}/libraries/${lib}.cmake")
         endif()
         # then link against it
         # two possibilities: a) target already known, so add it directly, or b) target not yet known, so add it to its cache
