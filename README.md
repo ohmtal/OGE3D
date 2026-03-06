@@ -17,42 +17,7 @@ cd game
 ```
 note: if you are not using bash: replace -j$(nproc) with -j[number of processors] -j8 for example.
 
-
-``` KDevelop config example for Project Demo:
-    Install Directory=/opt/OGE3D/Projects/Demo
-    Build Directory Path=/opt/OGE3D/Projects/Demo
-    Install Directory=/opt/OGE3D/Projects/Demo/temp
-```
-
-## current todo 
-    
-- [~] Demo/Playground project 
-    - biggest Problem: all my projects have assets with a copyright so i cant use it here 
-    
-## todos in random order 
-
-- [ ] cmake / project
-    - [ ] change the cmake system so projects it can include it
-    - [ ] Projects need to start the engine at the moment there is only the config header 
-    - [ ] test and documentate it 
-
-- [ ] updating to SDL3 
-- [ ] updating to C++20 (evaluation first)
-- [ ] updating the libs or using current versions. 
-- [ ] Streamline code: 
-    - [ ] do i really need oculus, hydra, physx and openvr ? 
-    - [ ] I used a pre 4.0 version of 3.10 development version when i pulled it years ago and there a still fragments like the assets handling which can be removed. 
-    - [ ] remove DirectX so I can concentrate on OpenGL and maybe later add Vulcan. 
-    - [ ] optional: collada is deprecated. 
-    - [ ] adding gltf (https://github.com/KhronosGroup/glTF-Sample-Models/tree/main)
-- [ ] imgui would be cool but a lot of work to add the torque script bindings 
-- [ ] the new Torque3D Torque Script code would be cool but last time (2023) i tried to port it i cancled. 
-- [ ] evaluate emscripten support 
-- [ ] evaluate android support 
-
-
-
-
+---
 
 ## core / shaders / tools 
 
