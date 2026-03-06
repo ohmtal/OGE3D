@@ -221,7 +221,7 @@ ShapeBaseData::ShapeBaseData()
    // XXTH lightweigt mountimage: >>
 #ifdef _res_equipmentMesh
    mountOffset.identity();
-#endif;
+#endif
 //<<
 
 }

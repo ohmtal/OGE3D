@@ -71,7 +71,7 @@ public:
    S32 getWidth() const { return(mTextureHandle.getWidth() / mCols); }
    S32 getHeight() const { return(mTextureHandle.getHeight() / mRows); }
 
-   bool setColor(ColorI lColorModulation) { mColorModulation = lColorModulation; }
+   bool setColor(ColorI lColorModulation) { mColorModulation = lColorModulation; return true;}
    ColorI getColor() { return mColorModulation; }
 
 

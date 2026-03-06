@@ -76,10 +76,6 @@ public:
       return pParent->getContainerChildClass(recurse);
    }
 
-   virtual WriteCustomTamlSchema getCustomTamlSchema(void)
-   {
-      return T::getStaticWriteCustomTamlSchema();
-   }
 
    /// Perform class specific initialization tasks.
    ///

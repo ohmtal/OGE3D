@@ -1161,6 +1161,7 @@ bool tom2DCtrl::addDynamicTrianglePointsAndColors(Vector<Point3F> lPoints, Vecto
       mDynamicColors.push_back(lColors[i]);
 
    }
+   return true;
 }
 //------------------------------------------------------------------------------
 

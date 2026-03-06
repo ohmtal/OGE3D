@@ -35,10 +35,13 @@
 #include "core/util/tVector.h"
 #endif // _TVECTOR_H_
 
+#include "tinyxml2/tinyxml2.h"
 
-class TiXmlDocument;
-class TiXmlElement;
-class TiXmlAttribute;
+namespace tinyxml2 {
+    class XMLDocument;
+    class XMLElement;
+    class XMLAttribute;
+}
 
 
 class SimXMLDocument: public SimObject
@@ -136,11 +139,11 @@ class SimXMLDocument: public SimObject
       
    private:
       // Document.
-      TiXmlDocument* m_qDocument;
+      tinyxml2::XMLDocument* m_qDocument;
       // Stack of nodes.
-      Vector<TiXmlElement*> m_paNode;
+      Vector<tinyxml2::XMLElement*> m_paNode;
      // The current attribute
-     TiXmlAttribute* m_CurrentAttribute;
+     const tinyxml2::XMLAttribute* m_CurrentAttribute;
 
    public:
       DECLARE_CONOBJECT(SimXMLDocument);

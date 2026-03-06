@@ -2242,12 +2242,12 @@ void TSShapeConstructor::ChangeSet::write(TSShape* shape, Stream& stream, const 
 }
 
 
-TiXmlElement *createNodeWithText( const char* name, const char* text )
-{
-   TiXmlElement* node = new TiXmlElement( name );
-   node->LinkEndChild( new TiXmlText( text ) );
-   return node;
-}
+// TiXmlElement *createNodeWithText( const char* name, const char* text )
+// {
+//    TiXmlElement* node = new TiXmlElement( name );
+//    node->LinkEndChild( new TiXmlText( text ) );
+//    return node;
+// }
 
 void TSShapeConstructor::ChangeSet::add( TSShapeConstructor::ChangeSet::Command& cmd )
 {

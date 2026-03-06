@@ -3,8 +3,6 @@
 #include "T3D/systems/componentSystem.h"
 #include "ts/tsShape.h"
 #include "ts/tsShapeInstance.h"
-#include "T3D/assets/ShapeAsset.h"
-#include "T3D/assets/MaterialAsset.h"
 
 #ifndef _GFXVERTEXBUFFER_H_
 #include "gfx/gfxVertexBuffer.h"

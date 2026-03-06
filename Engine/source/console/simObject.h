@@ -37,9 +37,9 @@
    #include "core/bitSet.h"
 #endif
 
-#ifndef _TAML_CALLBACKS_H_
-#include "persistence/taml/tamlCallbacks.h"
-#endif
+// #ifndef _TAML_CALLBACKS_H_
+// #include "persistence/taml/tamlCallbacks.h"
+// #endif
 
 class Stream;
 class LightManager;
@@ -233,7 +233,7 @@ class SimPersistID;
 /// set automatically by the console constructor code.
 ///
 /// @nosubgrouping
-class SimObject: public ConsoleObject, public TamlCallbacks
+class SimObject: public ConsoleObject // , public TamlCallbacks
 {
    public:
    
@@ -385,14 +385,14 @@ class SimObject: public ConsoleObject, public TamlCallbacks
       inline StringTableEntry getProgenitorFile(void) const { return mProgenitorFile; }
 
    protected:
-      /// Taml callbacks.
-      virtual void onTamlPreWrite(void) {}
-      virtual void onTamlPostWrite(void) {}
-      virtual void onTamlPreRead(void) {}
-      virtual void onTamlPostRead(const TamlCustomNodes& customNodes) {}
-      virtual void onTamlAddParent(SimObject* pParentObject) {}
-      virtual void onTamlCustomWrite(TamlCustomNodes& customNodes) {}
-      virtual void onTamlCustomRead(const TamlCustomNodes& customNodes);
+      // /// Taml callbacks.
+      // virtual void onTamlPreWrite(void) {}
+      // virtual void onTamlPostWrite(void) {}
+      // virtual void onTamlPreRead(void) {}
+      // virtual void onTamlPostRead(const TamlCustomNodes& customNodes) {}
+      // virtual void onTamlAddParent(SimObject* pParentObject) {}
+      // virtual void onTamlCustomWrite(TamlCustomNodes& customNodes) {}
+      // virtual void onTamlCustomRead(const TamlCustomNodes& customNodes);
    
       /// Id number for this object.
       SimObjectId mId;

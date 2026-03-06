@@ -44,8 +44,6 @@
 #include "console/engineAPI.h"
 #include "math/mTransform.h"
 
-#include "T3D/entity.h"
-#include "T3D/components/coreInterfaces.h"
 
 #ifdef TORQUE_HIFI_NET
    #include "T3D/gameBase/hifi/hifiMoveList.h"
@@ -777,104 +775,69 @@ bool GameConnection::getControlCameraDefaultFov(F32 * fov)
 
 bool GameConnection::getControlCameraFov(F32 * fov)
 {
-   //find the last control object in the chain (client->player->turret->whatever...)
-   GameBase *obj = getCameraObject();
-   GameBase *cObj = NULL;
-   while (obj)
-   {
-      cObj = obj;
-      obj = obj->getControlObject();
-   }
-   if (cObj)
-   {
-      if (Entity* ent = dynamic_cast<Entity*>(cObj))
+      GameBase *obj = getCameraObject();
+      GameBase *cObj = NULL;
+      while (obj)
       {
-         if (CameraInterface* camInterface = ent->getComponent<CameraInterface>())
-         {
-            *fov = camInterface->getCameraFov();
-         }
+            cObj = obj;
+            obj = obj->getControlObject();
       }
-      else
+      if (cObj)
       {
-         *fov = cObj->getCameraFov();
+            *fov = cObj->getCameraFov();
+
+            return(true);
       }
 
-      return(true);
-   }
+      return(false);
 
-   return(false);
 }
 
 bool GameConnection::isValidControlCameraFov(F32 fov)
 {
-   //find the last control object in the chain (client->player->turret->whatever...)
-   GameBase *obj = getCameraObject();
-   GameBase *cObj = NULL;
-   while (obj)
-   {
-      cObj = obj;
-      obj = obj->getControlObject();
-   }
-
-   if (cObj)
-   {
-      if (Entity* ent = dynamic_cast<Entity*>(cObj))
+      //find the last control object in the chain (client->player->turret->whatever...)
+      GameBase *obj = getCameraObject();
+      GameBase *cObj = NULL;
+      while (obj)
       {
-         if (CameraInterface* camInterface = ent->getComponent<CameraInterface>())
-         {
-            return camInterface->isValidCameraFov(fov);
-         }
+            cObj = obj;
+            obj = obj->getControlObject();
       }
-      else
-      {
-         return cObj->isValidCameraFov(fov);
-      }
-   }
-   //XXTH /opt/OGE3D/Engine/source/T3D/gameBase/gameConnection.cpp:834:11: fatal error: cannot initialize return object of type 'bool' with an rvalue of type 'nullptr_t'
 
-   return false;
+      if (cObj)
+      {
+            return cObj->isValidCameraFov(fov);
+      }
+
+      return false;
 }
 
 bool GameConnection::setControlCameraFov(F32 fov)
 {
-   //find the last control object in the chain (client->player->turret->whatever...)
-   GameBase *obj = getCameraObject();
-   GameBase *cObj = NULL;
-   while (obj)
-   {
-      cObj = obj;
-      obj = obj->getControlObject();
-   }
-   if (cObj)
-   {
-      F32 newFov = 90.f;
-      if (Entity* ent = dynamic_cast<Entity*>(cObj))
+      //find the last control object in the chain (client->player->turret->whatever...)
+      GameBase *obj = getCameraObject();
+      GameBase *cObj = NULL;
+      while (obj)
       {
-         if (CameraInterface* camInterface = ent->getComponent<CameraInterface>())
-         {
-            camInterface->setCameraFov(mClampF(fov, MinCameraFov, MaxCameraFov));
-            newFov = camInterface->getCameraFov();
-         }
-         else
-         {
-            Con::errorf("Attempted to setControlCameraFov, but we don't have a camera!");
-         }
+            cObj = obj;
+            obj = obj->getControlObject();
       }
-      else
+      if (cObj)
       {
-         // allow shapebase to clamp fov to its datablock values
-         cObj->setCameraFov(mClampF(fov, MinCameraFov, MaxCameraFov));
-         newFov = cObj->getCameraFov();
+            F32 newFov = 90.f;
+
+            // allow shapebase to clamp fov to its datablock values
+            cObj->setCameraFov(mClampF(fov, MinCameraFov, MaxCameraFov));
+            newFov = cObj->getCameraFov();
+
+            // server fov of client has 1degree resolution
+            if( S32(newFov) != S32(mCameraFov) || newFov != fov )
+                  mUpdateCameraFov = true;
+
+            mCameraFov = newFov;
+            return(true);
       }
-
-      // server fov of client has 1degree resolution
-      if( S32(newFov) != S32(mCameraFov) || newFov != fov )
-         mUpdateCameraFov = true;
-
-      mCameraFov = newFov;
-      return(true);
-   }
-   return(false);
+      return(false);
 }
 
 bool GameConnection::getControlCameraVelocity(Point3F *vel)

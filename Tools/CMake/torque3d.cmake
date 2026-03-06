@@ -22,30 +22,55 @@
 
 project(${TORQUE_APP_NAME})
 
+# if(UNIX)
+#     if(NOT CXX_FLAG32)
+#         set(CXX_FLAG32 "")
+#     endif()
+#     #set(CXX_FLAG32 "-m32") #uncomment for build x32 on OSx64
+#
+#     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
+# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
+#     else()
+#     # default compiler flags
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
+# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
+#
+#    endif()
+#
+# 	# for asm files
+# 	SET (CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
+# 	ENABLE_LANGUAGE (ASM_NASM)
+#
+#     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# endif()
+
+# XXTH
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(UNIX)
-    if(NOT CXX_FLAG32)
-        set(CXX_FLAG32 "")
-    endif()
-    #set(CXX_FLAG32 "-m32") #uncomment for build x32 on OSx64
+    add_compile_options(-msse -pipe -Wfatal-errors)
+
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-invalid-offsetof>)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-writable-strings>)
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-    else()
-    # default compiler flags
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-return-type-c-linkage>)
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-unused-local-typedef>)
+    endif()
 
-   endif()    
 
-	# for asm files
-	SET (CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
-	ENABLE_LANGUAGE (ASM_NASM)
+    # -------
 
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
+    enable_language(ASM_NASM)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-# TODO: fmod support
+# target_compile_options(${TORQUE_APP_NAME} PRIVATE -Wundef)
+
 
 ###############################################################################
 # modules
@@ -362,10 +387,10 @@ addPathRec("${srcDir}/T3D/components/")
 addPathRec("${srcDir}/T3D/systems")
 
 addPath("${srcDir}/main/")
-addPath("${srcDir}/assets")
-addPath("${srcDir}/module")
-addPathRec("${srcDir}/T3D/assets")
-addPathRec("${srcDir}/persistence")
+# addPath("${srcDir}/assets")
+# addPath("${srcDir}/module")
+# addPathRec("${srcDir}/T3D/assets")
+# addPathRec("${srcDir}/persistence")
 addPathRec("${srcDir}/ts/collada")
 addPathRec("${srcDir}/ts/loader")
 addPathRec("${projectSrcDir}")
@@ -653,7 +678,7 @@ endif()
 addLib(lpng)
 addLib(ljpeg)
 addLib(zlib)
-addLib(tinyxml)
+addLib(tinyxml2)
 addLib(opcode)
 addLib(squish)
 addLib(collada)
@@ -832,8 +857,8 @@ addInclude("${libDir}/lpng")
 addInclude("${libDir}/ljpeg")
 addInclude("${libDir}/lungif")
 addInclude("${libDir}/zlib")
-addInclude("${libDir}/") # for tinyxml
-addInclude("${libDir}/tinyxml")
+addInclude("${libDir}/") # for tinyxml2
+addInclude("${libDir}/tinyxml2")
 addInclude("${libDir}/squish")
 addInclude("${libDir}/convexDecomp")
 addInclude("${libDir}/libogg/include")

@@ -39,7 +39,6 @@
 #include "core/frameAllocator.h"
 #include "core/stream/fileStream.h"
 #include "core/fileObject.h"
-#include "persistence/taml/tamlCustom.h"
 
 #include "sim/netObject.h"
 #ifdef GMK_ENABLED
@@ -484,94 +483,6 @@ SimPersistID* SimObject::getOrCreatePersistentId()
 
 
 
-void SimObject::onTamlCustomRead(TamlCustomNodes const& customNodes)
-{
-   // Debug Profiling.
-   //PROFILE_SCOPE(SimObject_OnTamlCustomRead);
-
-   // Fetch field list.
-   const AbstractClassRep::FieldList& fieldList = getFieldList();
-   const U32 fieldCount = fieldList.size();
-   for (U32 index = 0; index < fieldCount; ++index)
-   {
-      // Fetch field.
-      const AbstractClassRep::Field* pField = &fieldList[index];
-
-      // Ignore if field not appropriate.
-      if (pField->type == AbstractClassRep::StartArrayFieldType || pField->elementCount > 1)
-      {
-         // Find cell custom node.
-         const TamlCustomNode* pCustomCellNodes = NULL;
-         if (pField->pGroupname != NULL)
-            pCustomCellNodes = customNodes.findNode(pField->pGroupname);
-         if (!pCustomCellNodes)
-         {
-            char* niceFieldName = const_cast<char *>(pField->pFieldname);
-            niceFieldName[0] = dToupper(niceFieldName[0]);
-            String str_niceFieldName = String(niceFieldName);
-            pCustomCellNodes = customNodes.findNode(str_niceFieldName + "s");
-         }
-
-         // Continue if we have explicit cells.
-         if (pCustomCellNodes != NULL)
-         {
-            // Fetch children cell nodes.
-            const TamlCustomNodeVector& cellNodes = pCustomCellNodes->getChildren();
-
-            U8 idx = 0;
-            // Iterate cells.
-            for (TamlCustomNodeVector::const_iterator cellNodeItr = cellNodes.begin(); cellNodeItr != cellNodes.end(); ++cellNodeItr)
-            {
-               char buf[5];
-               dSprintf(buf, 5, "%d", idx);
-
-               // Fetch cell node.
-               TamlCustomNode* pCellNode = *cellNodeItr;
-
-               // Fetch node name.
-               StringTableEntry nodeName = pCellNode->getNodeName();
-
-               // Is this a valid alias?
-               if (nodeName != pField->pFieldname)
-               {
-                  // No, so warn.
-                  Con::warnf("SimObject::onTamlCustomRead() - Encountered an unknown custom name of '%s'.  Only '%s' is valid.", nodeName, pField->pFieldname);
-                  continue;
-               }
-
-               // Fetch fields.
-               const TamlCustomFieldVector& fields = pCellNode->getFields();
-
-               // Iterate property fields.
-               for (TamlCustomFieldVector::const_iterator fieldItr = fields.begin(); fieldItr != fields.end(); ++fieldItr)
-               {
-                  // Fetch field.
-                  const TamlCustomField* cField = *fieldItr;
-
-                  // Fetch field name.
-                  StringTableEntry fieldName = cField->getFieldName();
-
-                  const AbstractClassRep::Field* field = findField(fieldName);
-
-                  // Check common fields.
-                  if (field)
-                  {
-                     setDataField(fieldName, buf, cField->getFieldValue());
-                  }
-                  else
-                  {
-                     // Unknown name so warn.
-                     Con::warnf("SimObject::onTamlCustomRead() - Encountered an unknown custom field name of '%s'.", fieldName);
-                     continue;
-                  }
-               }
-
-               idx++;
-            }
-         }
-      }
-   }
-}
 
 //-----------------------------------------------------------------------------
 

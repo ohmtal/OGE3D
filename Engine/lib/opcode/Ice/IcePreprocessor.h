@@ -22,7 +22,7 @@
       #pragma message("Compiling on PS3...")
       #define PLATFORM_PS3
 	#else
-		#pragma message("Compiling on unknown platform...")
+		// #pragma message("Compiling on unknown platform...")
 	#endif
 
 	// Check compiler
@@ -30,7 +30,7 @@
 		#pragma message("Compiling with VC++...")
 		#define COMPILER_VISUAL_CPP
 	#else
-		#pragma message("Compiling with unknown compiler...")
+		// #pragma message("Compiling with unknown compiler...")
 	#endif
 
 	// Check compiler options. If this file is included in user-apps, this

@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -138,3 +139,4 @@ DefineEngineMethod(GuiInspectorEntityGroup, addDynamicField, void, (), , "obj.ad
 DefineEngineMethod(GuiInspectorEntityGroup, removeDynamicField, void, (), , "")
 {
 }
+#endif

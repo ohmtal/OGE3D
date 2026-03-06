@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -25,7 +26,6 @@
 
 #include "gui/editor/inspector/group.h"
 #include "console/simFieldDictionary.h"
-#include "T3D/components/component.h"
 #include "gui/controls/guiPopUpCtrlEx.h"
 
 #ifndef _GUI_INSPECTOR_TYPES_H_
@@ -149,4 +149,5 @@ protected:
 	bool buildList(Entity* ent, GuiPopUpMenuCtrl* menu);
 };
 
+#endif
 #endif

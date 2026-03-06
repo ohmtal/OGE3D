@@ -410,12 +410,12 @@ void WorldEditorSelection::rotate(const EulerF & rot, const Point3F & center)
    // single selections will rotate around own axis, multiple about world
    if(size() == 1)
    {
-      Entity* eO = dynamic_cast< Entity* >(at(0));
-      if (eO)
-      {
-         eO->setTransform(eO->getPosition(), eO->getRotation() + RotationF(rot));
-      }
-      else
+      // Entity* eO = dynamic_cast< Entity* >(at(0));
+      // if (eO)
+      // {
+      //    eO->setTransform(eO->getPosition(), eO->getRotation() + RotationF(rot));
+      // }
+      // else
       {
          SceneObject* object = dynamic_cast<SceneObject*>(at(0));
          if (object)

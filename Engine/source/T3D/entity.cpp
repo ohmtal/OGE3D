@@ -1,3 +1,4 @@
+#if 0 //XXTH
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -2025,3 +2026,4 @@ DefineEngineFunction(findEntitiesByTag, const char*, (SimGroup* searchingGroup, 
 
    object->notifyComponents(signalFunction, argA, argB, argC, argD, argE);*/
 }
+#endif

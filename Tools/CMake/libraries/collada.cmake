@@ -34,6 +34,6 @@ addDef(PCRE_STATIC)
 addInclude(${libDir}/collada/include)
 addInclude(${libDir}/collada/include/1.4)
 addInclude(${libDir}/pcre)
-addInclude(${libDir}/tinyxml)
+addInclude(${libDir}/tinyxml2)
 
 finishLibrary()

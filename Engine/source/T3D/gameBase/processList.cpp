@@ -32,8 +32,6 @@
 #include "platform/profiler.h"
 #include "console/consoleTypes.h"
 
-#include "T3D/components/coreInterfaces.h"
-#include "T3D/components/component.h"
 //----------------------------------------------------------------------------
 
 ProcessObject::ProcessObject()
@@ -257,33 +255,28 @@ bool ProcessList::advanceTime(SimTime timeDelta)
 }
 
 //----------------------------------------------------------------------------
-
 void ProcessList::advanceObjects(SimTime timeDelta)
 {
-   PROFILE_START(ProcessList_AdvanceObjects);
+      PROFILE_START(ProcessList_AdvanceObjects);
 
-   // A little link list shuffling is done here to avoid problems
-   // with objects being deleted from within the process method.
-   ProcessObject list;
-   list.plLinkBefore(mHead.mProcessLink.next);
-   mHead.plUnlink();
-   for (ProcessObject * pobj = list.mProcessLink.next; pobj != &list; pobj = list.mProcessLink.next)
-   {
-      pobj->plUnlink();
-      pobj->plLinkBefore(&mHead);
-      
-      onTickObject(pobj);
-   }
+      // A little link list shuffling is done here to avoid problems
+      // with objects being deleted from within the process method.
+      ProcessObject list;
+      list.plLinkBefore(mHead.mProcessLink.next);
+      mHead.plUnlink();
+      for (ProcessObject * pobj = list.mProcessLink.next; pobj != &list; pobj = list.mProcessLink.next)
+      {
+            pobj->plUnlink();
+            pobj->plLinkBefore(&mHead);
 
-   for (U32 i = 0; i < UpdateInterface::all.size(); i++)
-   {
-      UpdateInterface::all[i]->processTick();
-   }
+            onTickObject(pobj);
+      }
 
-   mTotalTicks++;
+      mTotalTicks++;
 
-   PROFILE_END();
+      PROFILE_END();
 }
+
 
 ProcessObject* ProcessList::findNearestToEnd(Vector<ProcessObject*>& objs) const
 {

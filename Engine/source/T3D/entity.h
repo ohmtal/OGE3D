@@ -1,3 +1,5 @@
+#if 0 //XXTH
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -37,7 +39,7 @@
 #endif
 #ifndef _ASSET_PTR_H_
 #include "assets/assetPtr.h"
-#endif 
+#endif
 #ifndef GAME_OBJECT_ASSET_H
 #include "T3D/assets/GameObjectAsset.h"
 #endif
@@ -323,3 +325,4 @@ Vector<T*> Entity::getComponents()
    return foundObjects;
 }
 #endif //ENTITY_H
+#endif

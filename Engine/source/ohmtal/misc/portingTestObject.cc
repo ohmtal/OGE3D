@@ -1,5 +1,5 @@
 #include "console/engineAPI.h"
-#include "portingTestObject.h";
+#include "portingTestObject.h"
 
 
 IMPLEMENT_CONOBJECT(portingTestObject);

@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -529,3 +530,4 @@ DefineEngineMethod(GuiInspectorComponentGroup, getComponent, S32, (), , "")
 {
    return object->getComponent()->getId();
 }
+#endif

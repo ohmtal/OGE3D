@@ -20,7 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "tinyxml/tinyxml.h"
+#include "tinyxml2/tinyxml2.h"
 
 //-----------------------------------------------------------------------------
 // Console implementation of STL map.
@@ -175,7 +175,7 @@ bool SimXMLDocument::onAdd()
 
    if(!m_qDocument)
    {
-      m_qDocument = new TiXmlDocument();
+      m_qDocument = new tinyxml2::XMLDocument();
    }
    return true;
 }
@@ -252,7 +252,7 @@ bool SimXMLDocument::saveFile(const char* rFileName)
 // -----------------------------------------------------------------------------
 bool SimXMLDocument::saveToString(String& str)
 {
-   TiXmlPrinter printer;
+   tinyxml2::XMLPrinter printer;
    bool ret = m_qDocument->Accept( &printer );
    if (ret)
       str = printer.CStr();
@@ -312,7 +312,7 @@ const char* SimXMLDocument::getErrorDesc(void) const
    {
       return StringTable->insert("No document");
    }
-   return m_qDocument->ErrorDesc();
+   return m_qDocument->ErrorStr();
 }
 
 DefineEngineMethod( SimXMLDocument, getErrorDesc, const char*, (),,
@@ -345,11 +345,11 @@ bool SimXMLDocument::pushFirstChildElement(const char* rName)
    m_CurrentAttribute = 0;
 
    // Push the first element found under the current element of the given name
-   TiXmlElement* pElement;
+   tinyxml2::XMLElement* pElement;
    if(!m_paNode.empty())
    {
       const S32 iLastElement = m_paNode.size() - 1;
-      TiXmlElement* pNode = m_paNode[iLastElement];
+      tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
       if(!pNode)
       {
          return false;
@@ -409,11 +409,11 @@ bool SimXMLDocument::pushChildElement(S32 index)
    m_CurrentAttribute = 0;
 
    // Push the first element found under the current element of the given name
-   TiXmlElement* pElement;
+   tinyxml2::XMLElement* pElement;
    if(!m_paNode.empty())
    {
       const S32 iLastElement = m_paNode.size() - 1;
-      TiXmlElement* pNode = m_paNode[iLastElement];
+      tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
       if(!pNode)
       {
          return false;
@@ -473,7 +473,7 @@ bool SimXMLDocument::nextSiblingElement(const char* rName)
       return false;
    }
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement*& pElement = m_paNode[iLastElement];
+   tinyxml2::XMLElement*& pElement = m_paNode[iLastElement];
    if(!pElement)
    {
       return false;
@@ -507,7 +507,7 @@ const char* SimXMLDocument::elementValue()
       return StringTable->EmptyString();
    }
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
    if(!pNode)
    {
       return StringTable->EmptyString();
@@ -548,7 +548,7 @@ const char* SimXMLDocument::attribute(const char* rAttribute)
       return StringTable->EmptyString();
    }
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
    if(!pNode)
    {
       return StringTable->EmptyString();
@@ -599,7 +599,7 @@ bool SimXMLDocument::attributeExists(const char* rAttribute)
       return false;
    }
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
    if(!pNode)
    {
       return false;
@@ -632,7 +632,7 @@ const char* SimXMLDocument::firstAttribute()
       return StringTable->EmptyString();
    }
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
    if(!pNode)
    {
       return StringTable->EmptyString();
@@ -663,27 +663,56 @@ DefineEngineMethod( SimXMLDocument, firstAttribute, const char*, (),,
 // -----------------------------------------------------------------------------
 const char* SimXMLDocument::lastAttribute()
 {
-   // Get the current element
-   if(m_paNode.empty())
-   {
-      return StringTable->EmptyString();
-   }
-   const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iLastElement];
-   if(!pNode)
-   {
-      return StringTable->EmptyString();
-   }
+      // Get the current element
+      if(m_paNode.empty())
+      {
+            return StringTable->EmptyString();
+      }
+      const S32 iLastElement = m_paNode.size() - 1;
+      tinyxml2::XMLElement* pNode = m_paNode[iLastElement]->ToElement();
+      if(!pNode)
+      {
+            return StringTable->EmptyString();
+      }
 
-   // Gets its last attribute, if any
-   m_CurrentAttribute = pNode->LastAttribute();
-   if(!m_CurrentAttribute)
-   {
-      return StringTable->EmptyString();
-   }
+      // Gets its last attribute, if any
+      m_CurrentAttribute = pNode->FirstAttribute();
+      while (m_CurrentAttribute->Next() != NULL)
+      {
+            m_CurrentAttribute = m_CurrentAttribute->Next();
+      }
+      if(!m_CurrentAttribute)
+      {
+            return StringTable->EmptyString();
+      }
 
-   return m_CurrentAttribute->Name();
+      return m_CurrentAttribute->Name();
 }
+
+
+// const char* SimXMLDocument::lastAttribute()
+// {
+//    // Get the current element
+//    if(m_paNode.empty())
+//    {
+//       return StringTable->EmptyString();
+//    }
+//    const S32 iLastElement = m_paNode.size() - 1;
+//    tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
+//    if(!pNode)
+//    {
+//       return StringTable->EmptyString();
+//    }
+//
+//    // Gets its last attribute, if any
+//    m_CurrentAttribute = pNode->LastAttribute();
+//    if(!m_CurrentAttribute)
+//    {
+//       return StringTable->EmptyString();
+//    }
+//
+//    return m_CurrentAttribute->Name();
+// }
 
 DefineEngineMethod( SimXMLDocument, lastAttribute, const char*, (),,
    "@brief Obtain the name of the current Element's last attribute.\n\n"
@@ -732,20 +761,53 @@ DefineEngineMethod( SimXMLDocument, nextAttribute, const char*, (),,
 // -----------------------------------------------------------------------------
 const char* SimXMLDocument::prevAttribute()
 {
-   if(!m_CurrentAttribute)
-   {
-      return StringTable->EmptyString();
-   }
+      // Get the current element
+      if (m_paNode.empty())
+      {
+            return StringTable->EmptyString();
+      }
+      const S32 iLastElement = m_paNode.size() - 1;
+      tinyxml2::XMLElement* pNode = m_paNode[iLastElement]->ToElement();
+      if (!pNode)
+      {
+            return StringTable->EmptyString();
+      }
 
-   // Gets its next attribute, if any
-   m_CurrentAttribute = m_CurrentAttribute->Previous();
-   if(!m_CurrentAttribute)
-   {
-      return StringTable->EmptyString();
-   }
+      if(!m_CurrentAttribute)
+      {
+            return StringTable->EmptyString();
+      }
 
-   return m_CurrentAttribute->Name();
+      // Gets its next attribute, if any
+      while (m_CurrentAttribute != NULL && m_CurrentAttribute->Next() != m_CurrentAttribute)
+      {
+            m_CurrentAttribute = m_CurrentAttribute->Next();
+      }
+
+      if(!m_CurrentAttribute)
+      {
+            return StringTable->EmptyString();
+      }
+
+      return m_CurrentAttribute->Name();
 }
+
+// const char* SimXMLDocument::prevAttribute()
+// {
+//    if(!m_CurrentAttribute)
+//    {
+//       return StringTable->EmptyString();
+//    }
+//
+//    // Gets its next attribute, if any
+//    m_CurrentAttribute = m_CurrentAttribute->Previous();
+//    if(!m_CurrentAttribute)
+//    {
+//       return StringTable->EmptyString();
+//    }
+//
+//    return m_CurrentAttribute->Name();
+// }
 
 DefineEngineMethod( SimXMLDocument, prevAttribute, const char*, (),,
    "@brief Get the name of the previous attribute for the current Element after a call to lastAttribute().\n\n"
@@ -768,7 +830,7 @@ void SimXMLDocument::setAttribute(const char* rAttribute, const char* rVal)
    }
 
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pElement = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pElement = m_paNode[iLastElement];
    if(!pElement)
    {
       return;
@@ -800,13 +862,13 @@ void SimXMLDocument::setObjectAttributes(const char* objectID)
       return;
 
    const S32 iLastElement = m_paNode.size() - 1;
-   TiXmlElement* pElement = m_paNode[iLastElement];
+   tinyxml2::XMLElement* pElement = m_paNode[iLastElement];
    if(!pElement)
       return;
 
    char textbuf[1024];
-   TiXmlElement field( "Field" );
-   TiXmlElement group( "FieldGroup" );
+   tinyxml2::XMLElement* field = m_qDocument->NewElement( "Field" );
+   tinyxml2::XMLElement* group = m_qDocument->NewElement( "FieldGroup" );
    pElement->SetAttribute( "Name", pObject->getName() );
 
 
@@ -846,13 +908,13 @@ void SimXMLDocument::setObjectAttributes(const char* objectID)
          if( !pObject->writeField( itr->pFieldname, textbuf ) )
             continue;
 
-         field.SetValue( "Property" );
-         field.SetAttribute( "name",  itr->pFieldname );
+         field->SetValue( "Property" );
+         field->SetAttribute( "name",  itr->pFieldname );
          if( cbt != NULL )
-            field.SetAttribute( "type", cbt->getTypeName() );
+            field->SetAttribute( "type", cbt->getTypeName() );
          else
-            field.SetAttribute( "type", "TypeString" );
-         field.SetAttribute( "data", textbuf );
+            field->SetAttribute( "type", "TypeString" );
+         field->SetAttribute( "data", textbuf );
 
          pElement->InsertEndChild( field );
 
@@ -917,22 +979,22 @@ DefineEngineMethod( SimXMLDocument, setObjectAttributes, void, ( const char* obj
 // -----------------------------------------------------------------------------
 void SimXMLDocument::pushNewElement(const char* rName)
 {    
-   TiXmlElement cElement( rName );
-   TiXmlElement* pStackTop = 0;
+   tinyxml2::XMLElement* cElement = m_qDocument->NewElement( rName );
+   tinyxml2::XMLElement* pStackTop = 0;
    if(m_paNode.empty())
    {
-      pStackTop = dynamic_cast<TiXmlElement*>
+      pStackTop = dynamic_cast<tinyxml2::XMLElement*>
          (m_qDocument->InsertEndChild( cElement ) );
    }
    else
    {
       const S32 iFinalElement = m_paNode.size() - 1;
-      TiXmlElement* pNode = m_paNode[iFinalElement];
+      tinyxml2::XMLElement* pNode = m_paNode[iFinalElement];
       if(!pNode)
       {
          return;
       }
-      pStackTop = dynamic_cast<TiXmlElement*>
+      pStackTop = dynamic_cast<tinyxml2::XMLElement*>
          (pNode->InsertEndChild( cElement ));
    }
    if(!pStackTop)
@@ -962,11 +1024,11 @@ DefineEngineMethod( SimXMLDocument, pushNewElement, void, ( const char* name ),,
 // -----------------------------------------------------------------------------
 void SimXMLDocument::addNewElement(const char* rName)
 {    
-   TiXmlElement cElement( rName );
-   TiXmlElement* pStackTop = 0;
+   tinyxml2::XMLElement* cElement = m_qDocument->NewElement( rName );
+   tinyxml2::XMLElement* pStackTop = 0;
    if(m_paNode.empty())
    {
-      pStackTop = dynamic_cast<TiXmlElement*>
+      pStackTop = dynamic_cast<tinyxml2::XMLElement*>
          (m_qDocument->InsertEndChild( cElement ));
       if(!pStackTop)
       {
@@ -979,7 +1041,7 @@ void SimXMLDocument::addNewElement(const char* rName)
    const S32 iParentElement = m_paNode.size() - 2;
    if(iParentElement < 0)
    {
-      pStackTop = dynamic_cast<TiXmlElement*>
+      pStackTop = dynamic_cast<tinyxml2::XMLElement*>
          (m_qDocument->InsertEndChild( cElement ));
       if(!pStackTop)
       {
@@ -990,12 +1052,12 @@ void SimXMLDocument::addNewElement(const char* rName)
    }
    else
    {
-      TiXmlElement* pNode = m_paNode[iParentElement];
+      tinyxml2::XMLElement* pNode = m_paNode[iParentElement];
       if(!pNode)
       {
          return;
       }   
-      pStackTop = dynamic_cast<TiXmlElement*>
+      pStackTop = dynamic_cast<tinyxml2::XMLElement*>
          (pNode->InsertEndChild( cElement ));
       if(!pStackTop)
       {
@@ -1027,11 +1089,18 @@ DefineEngineMethod( SimXMLDocument, addNewElement, void, ( const char* name ),,
 // -----------------------------------------------------------------------------
 // Write XML document declaration.
 // -----------------------------------------------------------------------------
+
 void SimXMLDocument::addHeader(void)
 {
-   TiXmlDeclaration cDeclaration("1.0", "utf-8", "yes");
-   m_qDocument->InsertEndChild(cDeclaration);
+      tinyxml2::XMLDeclaration* cDeclaration = m_qDocument->NewDeclaration("xml version=\"1.0\" encoding=\"UTF-8\" standalone =\"yes\"");
+      m_qDocument->InsertEndChild(cDeclaration);
 }
+
+// void SimXMLDocument::addHeader(void)
+// {
+//    tinyxml2::XMLDeclaration cDeclaration("1.0", "utf-8", "yes");
+//    m_qDocument->InsertEndChild(cDeclaration);
+// }
 
 DefineEngineMethod( SimXMLDocument, addHeader, void, (),,
    "@brief Add a XML header to a document.\n\n"
@@ -1057,10 +1126,17 @@ DefineEngineMethod( SimXMLDocument, addHeader, void, (),,
 
 void SimXMLDocument::addComment(const char* comment)
 {
-   TiXmlComment cComment;
-   cComment.SetValue(comment);
-   m_qDocument->InsertEndChild(cComment);
+      tinyxml2::XMLComment* cComment = m_qDocument->NewComment(comment);
+      cComment->SetValue(comment);
+      m_qDocument->InsertEndChild(cComment);
 }
+//
+// void SimXMLDocument::addComment(const char* comment)
+// {
+//    tinyxml2::XMLComment cComment;
+//    cComment.SetValue(comment);
+//    m_qDocument->InsertEndChild(cComment);
+// }
 
 DefineEngineMethod(SimXMLDocument, addComment, void, ( const char* comment ),,
   "@brief Add the given comment as a child of the document.\n\n"
@@ -1093,12 +1169,12 @@ const char* SimXMLDocument::readComment( S32 index )
    if(!m_paNode.empty())
    {
       const S32 iLastElement = m_paNode.size() - 1;
-      TiXmlElement* pNode = m_paNode[iLastElement];
+      tinyxml2::XMLElement* pNode = m_paNode[iLastElement];
       if(!pNode)
       {
          return "";
       }
-      TiXmlNode* node = pNode->FirstChild();
+      tinyxml2::XMLNode* node = pNode->FirstChild();
       for( S32 i = 0; i < index; i++ )
       {
          if( !node )
@@ -1109,7 +1185,7 @@ const char* SimXMLDocument::readComment( S32 index )
 
       if( node )
       {
-         TiXmlComment* comment = node->ToComment();
+         tinyxml2::XMLComment* comment = node->ToComment();
          if( comment )
             return comment->Value();
       }
@@ -1120,7 +1196,7 @@ const char* SimXMLDocument::readComment( S32 index )
       {
          return "";
       }
-      TiXmlNode* node = m_qDocument->FirstChild();
+      tinyxml2::XMLNode* node = m_qDocument->FirstChild();
       for( S32 i = 0; i < index; i++ )
       {
          if( !node )
@@ -1131,7 +1207,7 @@ const char* SimXMLDocument::readComment( S32 index )
 
       if( node )
       {
-         TiXmlComment* comment = node->ToComment();
+         tinyxml2::XMLComment* comment = node->ToComment();
          if( comment )
             return comment->Value();
       }
@@ -1161,11 +1237,11 @@ void SimXMLDocument::addText(const char* text)
       return;
 
    const S32 iFinalElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iFinalElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iFinalElement];
    if(!pNode)
       return;
 
-   TiXmlText cText(text);
+   tinyxml2::XMLText* cText = m_qDocument->NewText(text);
    pNode->InsertEndChild( cText );
 }
 
@@ -1206,14 +1282,14 @@ const char* SimXMLDocument::getText()
       return "";
 
    const S32 iFinalElement = m_paNode.size() - 1;
-   TiXmlNode* pNode = m_paNode[iFinalElement];
+   tinyxml2::XMLNode* pNode = m_paNode[iFinalElement];
    if(!pNode)
       return "";
 
    if(!pNode->FirstChild())
       return "";
 
-   TiXmlText* text = pNode->FirstChild()->ToText();
+   tinyxml2::XMLText* text = pNode->FirstChild()->ToText();
    if( !text )
       return "";
 
@@ -1266,18 +1342,18 @@ void SimXMLDocument::removeText()
       return;
 
    const S32 iFinalElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iFinalElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iFinalElement];
    if(!pNode)
       return;
 
    if( !pNode->FirstChild() )
       return;
 
-   TiXmlText* text = pNode->FirstChild()->ToText();
+   tinyxml2::XMLText* text = pNode->FirstChild()->ToText();
    if( !text )
       return;
 
-   pNode->RemoveChild(text);
+   pNode->DeleteChild(text);
 }
 
 DefineEngineMethod( SimXMLDocument, removeText, void, (),,
@@ -1302,11 +1378,11 @@ void SimXMLDocument::addData(const char* text)
       return;
 
    const S32 iFinalElement = m_paNode.size() - 1;
-   TiXmlElement* pNode = m_paNode[iFinalElement];
+   tinyxml2::XMLElement* pNode = m_paNode[iFinalElement];
    if(!pNode)
       return;
 
-   TiXmlText cText(text);
+   tinyxml2::XMLText* cText = m_qDocument->NewText(text);
    pNode->InsertEndChild( cText );
 }
 
@@ -1348,14 +1424,14 @@ const char* SimXMLDocument::getData()
       return "";
 
    const S32 iFinalElement = m_paNode.size() - 1;
-   TiXmlNode* pNode = m_paNode[iFinalElement];
+   tinyxml2::XMLNode* pNode = m_paNode[iFinalElement];
    if(!pNode)
       return "";
 
    if( !pNode->FirstChild() )
       return "";
 
-   TiXmlText* text = pNode->FirstChild()->ToText();
+   tinyxml2::XMLText* text = pNode->FirstChild()->ToText();
    if( !text )
       return "";
 

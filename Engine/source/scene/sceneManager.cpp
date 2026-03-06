@@ -38,7 +38,7 @@
 #include "T3D/gameBase/gameConnection.h"
 #include "math/mathUtils.h"
 
-#include "T3D/components/render/renderComponentInterface.h"
+// #include "T3D/components/render/renderComponentInterface.h"
 #include "T3D/systems/render/meshRenderSystem.h"
 
 // For player object bounds workaround.

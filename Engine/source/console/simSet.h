@@ -39,7 +39,7 @@
 #include "core/util/tSignal.h"
 #endif
 
-#include "persistence/taml/tamlChildren.h"
+// #include "persistence/taml/tamlChildren.h"
 
 //---------------------------------------------------------------------------
 /// A set of SimObjects.
@@ -90,7 +90,7 @@
 ///         }
 /// @endcode
 ///
-class SimSet : public SimObject, public TamlChildren
+class SimSet : public SimObject // , public TamlChildren
 {
    public:
 

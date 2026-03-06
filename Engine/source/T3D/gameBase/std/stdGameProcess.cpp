@@ -37,8 +37,6 @@
 #include "T3D/gameBase/std/stdMoveList.h"
 #include "T3D/fx/cameraFXMgr.h"
 
-#include "T3D/components/coreInterfaces.h"
-#include "T3D/components/component.h"
 
 MODULE_BEGIN( ProcessList )
 
@@ -116,63 +114,40 @@ StdClientProcessList::StdClientProcessList()
 
 bool StdClientProcessList::advanceTime( SimTime timeDelta )
 {
-   PROFILE_SCOPE( StdClientProcessList_AdvanceTime );
+      PROFILE_SCOPE( StdClientProcessList_AdvanceTime );
 
-   if ( doBacklogged( timeDelta ) )
-      return false;
- 
-   bool ret = Parent::advanceTime( timeDelta );
-   ProcessObject *obj = NULL;
+      if ( doBacklogged( timeDelta ) )
+            return false;
 
-   AssertFatal( mLastDelta >= 0.0f && mLastDelta <= 1.0f, "mLastDelta is not zero to one.");
-   
-   obj = mHead.mProcessLink.next;
-   while ( obj != &mHead )
-   {      
-      if ( obj->isTicking() )
-         obj->interpolateTick( mLastDelta );
+      bool ret = Parent::advanceTime( timeDelta );
+      ProcessObject *obj = NULL;
 
-      obj = obj->mProcessLink.next;
-   }
+      AssertFatal( mLastDelta >= 0.0f && mLastDelta <= 1.0f, "mLastDelta is not zero to one.");
 
-   for (U32 i = 0; i < UpdateInterface::all.size(); i++)
-   {
-      Component *comp = dynamic_cast<Component*>(UpdateInterface::all[i]);
-
-      if (!comp->isClientObject() || !comp->isActive())
-            continue;
-
-      UpdateInterface::all[i]->interpolateTick(mLastDelta);
-   }
-
-   // Inform objects of total elapsed delta so they can advance
-   // client side animations.
-   F32 dt = F32(timeDelta) / 1000;
-
-   // Update camera FX.
-   gCamFXMgr.update( dt );
-
-   obj = mHead.mProcessLink.next;
-   while ( obj != &mHead )
-   {      
-      obj->advanceTime( dt );
-      obj = obj->mProcessLink.next;
-   }
-   
-   for (U32 i = 0; i < UpdateInterface::all.size(); i++)
-   {
-      Component *comp = dynamic_cast<Component*>(UpdateInterface::all[i]);
-
-      if (comp)
+      obj = mHead.mProcessLink.next;
+      while ( obj != &mHead )
       {
-         if (!comp->isClientObject() || !comp->isActive())
-            continue;
+            if ( obj->isTicking() )
+                  obj->interpolateTick( mLastDelta );
+
+            obj = obj->mProcessLink.next;
       }
 
-      UpdateInterface::all[i]->advanceTime(dt);
-   }
+      // Inform objects of total elapsed delta so they can advance
+      // client side animations.
+      F32 dt = F32(timeDelta) / 1000;
 
-   return ret;
+      // Update camera FX.
+      gCamFXMgr.update( dt );
+
+      obj = mHead.mProcessLink.next;
+      while ( obj != &mHead )
+      {
+            obj->advanceTime( dt );
+            obj = obj->mProcessLink.next;
+      }
+
+      return ret;
 }
 
 //----------------------------------------------------------------------------

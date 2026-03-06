@@ -454,8 +454,10 @@ bool FileDialog::setDefaultPath(void *object, const char *index, const char *dat
 
    // Remove any trailing \'s .. XXTH added \/ check 2024-06-01
    S8 validateLen = dStrlen(szPathValidate);
-   if (szPathValidate[validateLen - 1] == '\\' || szPathValidate[validateLen - 1] == '\/')
+   if (szPathValidate[validateLen - 1] == '\\' || szPathValidate[validateLen - 1] == '/')
       szPathValidate[validateLen - 1] = '\0';
+
+
 
    // Now check
    if (Platform::isDirectory(szPathValidate))

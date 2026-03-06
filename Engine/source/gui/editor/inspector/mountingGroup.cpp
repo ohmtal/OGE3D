@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
 //
@@ -503,3 +504,4 @@ void GuiInspectorNodeListField::setTargetEntity(SimObjectPtr<Entity> target)
 {
 	mTargetEntity = target;
 }
+#endif

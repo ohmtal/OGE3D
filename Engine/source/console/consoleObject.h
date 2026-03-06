@@ -51,10 +51,6 @@
 #ifndef _SIMOBJECTREF_H_
    #include "console/simObjectRef.h"
 #endif
-#ifndef TINYXML_INCLUDED
-   #include "tinyxml/tinyxml.h"
-#endif
-
 /// @file
 /// Legacy console object system.
 
@@ -208,7 +204,6 @@ public:
    typedef ConsoleBaseType Parent;
 
    /// Allows the writing of a custom TAML schema.
-   typedef void(*WriteCustomTamlSchema)(const AbstractClassRep* pClassRep, TiXmlElement* pParentElement);
 
    /// @name 'Tructors
    /// @{
@@ -332,7 +327,6 @@ public:
    AbstractClassRep* getParentClass() const { return parentClass; }
 
    virtual AbstractClassRep*    getContainerChildClass(const bool recurse) = 0;
-   virtual WriteCustomTamlSchema getCustomTamlSchema(void) = 0;
 
    /// Return the size of instances of this class in bytes.
    S32 getSizeof() const { return mClassSizeof; }
@@ -598,11 +592,6 @@ public:
 
       // Get parent container children.
       return pParent->getContainerChildClass(recurse);
-   }
-
-   virtual WriteCustomTamlSchema getCustomTamlSchema(void)
-   {
-      return T::getStaticWriteCustomTamlSchema();
    }
 
    static EnginePropertyTable _smPropertyTable;
@@ -1175,6 +1164,8 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
 /// @name ConsoleObject Macros
 /// @{
 
+
+
 #define DECLARE_CONOBJECT( className )                   \
    DECLARE_CLASS( className, Parent );                   \
    static S32 _smTypeId;                                 \
@@ -1182,7 +1173,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    static AbstractClassRep* getParentStaticClassRep();   \
    static AbstractClassRep* getStaticClassRep();         \
    static SimObjectRefConsoleBaseType< className > ptrRefType;         \
-   static AbstractClassRep::WriteCustomTamlSchema getStaticWriteCustomTamlSchema();         \
    static AbstractClassRep* getContainerChildStaticClassRep();         \
    virtual AbstractClassRep* getClassRep() const
 
@@ -1201,7 +1191,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                       \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }  \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return NULL; }                 \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return NULL; }            \
    ConcreteClassRep<className> className::dynClassRep( #className, "Type" #className, &_smTypeId, 0, -1, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 #define IMPLEMENT_CONOBJECT_CHILDREN( className )                                                  \
@@ -1213,7 +1202,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                       \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }  \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return Children::getStaticClassRep(); }        \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return NULL; }            \
    ConcreteClassRep<className> className::dynClassRep( #className, "Type" #className, &_smTypeId, 0, -1, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 #define IMPLEMENT_CONOBJECT_SCHEMA( className, schema )                                            \
@@ -1225,7 +1213,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                       \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }  \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return NULL; }                 \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return schema; }            \
    ConcreteClassRep<className> className::dynClassRep( #className, "Type" #className, &_smTypeId, 0, -1, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 #define IMPLEMENT_CONOBJECT_CHILDREN_SCHEMA( className, schema )                                   \
@@ -1237,7 +1224,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                       \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }  \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return Children::getStaticClassRep(); }          \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return schema; }            \
    ConcreteClassRep<className> className::dynClassRep( #className, "Type" #className, &_smTypeId, 0, -1, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 #define IMPLEMENT_ABSTRACT_CONOBJECT( className )                                                  \
@@ -1259,7 +1245,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                             \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }        \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return NULL; }        \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return NULL; }  \
    ConcreteClassRep<className> className::dynClassRep( #className, "Type" #className, &_smTypeId, NetClassGroupGameMask, NetClassTypeObject, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 #define IMPLEMENT_CO_DATABLOCK_V1( className )                                                           \
@@ -1271,7 +1256,6 @@ inline bool& ConsoleObject::getDynamicGroupExpand()
    AbstractClassRep* className::getStaticClassRep() { return &dynClassRep; }                             \
    AbstractClassRep* className::getParentStaticClassRep() { return Parent::getStaticClassRep(); }        \
    AbstractClassRep* className::getContainerChildStaticClassRep() { return NULL; }                 \
-   AbstractClassRep::WriteCustomTamlSchema className::getStaticWriteCustomTamlSchema() { return NULL; }  \
    ConcreteClassRep<className> className::dynClassRep(#className, "Type" #className, &_smTypeId, NetClassGroupGameMask, NetClassTypeDataBlock, 0, className::getParentStaticClassRep(), &Parent::__description )
 
 // Support for adding properties to classes CONOBJECT style.
