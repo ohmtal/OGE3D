@@ -28,7 +28,7 @@
 #include "console/consoleTypes.h"
 #include "platform/profiler.h"
 #include "console/engineAPI.h"
-#include <nfd.h>
+#include <tinyfiledialogs.h>
 #include "core/strings/stringUnit.h"
 #include "core/frameAllocator.h"
 
@@ -188,13 +188,13 @@ static const U32 convertUTF16toUTF8DoubleNULL(const UTF16 *unistring, UTF8  *out
 //
 bool FileDialog::Execute()
 {
-#ifndef WIN32
-   Con::warnf("-----------------------------------------------------------------------------");
-   Con::warnf("FileDialog sucks dont use this ...... was not able to fix it! ");
-   Con::warnf("THIS BREAKS COMPLETLY MY GAME ON LINUX (ubuntu/kubunti...) TRY NOOOOOT to use it!");
-   Con::warnf("after this every console float becomes crazy  1.1 will be 1,1 and nothing works as it should!");
-   Con::warnf("-----------------------------------------------------------------------------");
-#endif // !WIN32
+// #ifndef WIN32
+//    Con::warnf("-----------------------------------------------------------------------------");
+//    Con::warnf("FileDialog sucks dont use this ...... was not able to fix it! ");
+//    Con::warnf("THIS BREAKS COMPLETLY MY GAME ON LINUX (ubuntu/kubunti...) TRY NOOOOOT to use it!");
+//    Con::warnf("after this every console float becomes crazy  1.1 will be 1,1 and nothing works as it should!");
+//    Con::warnf("-----------------------------------------------------------------------------");
+// #endif // !WIN32
 
    String strippedFilters;
 
@@ -253,6 +253,98 @@ bool FileDialog::Execute()
    if (mData.mDefaultPath == StringTable->lookup("") || !Platform::isDirectory(mData.mDefaultPath))
       mData.mDefaultPath = cwd;
    String rootDir = String(cwd);
+
+   // ~~~~~~~~~ porting >>>>>>>>>>>>>>>>>>>>>>>>>>
+
+   // Execute Dialog (Blocking Call) using tinyfiledialogs
+   const char *outPath = NULL;
+   const char *title = "Select File"; // You can pull this from mData.mTitle if available
+
+   // Handle Filters: tinyfd expects an array of const char* (e.g. {"*.png", "*.jpg"})
+   // If strippedFilters is a semicolon-separated string, you might need to split it
+   // or just pass NULL for all files.
+   const char* filterPatterns[] = { "*" };
+
+   String defaultPath = String(mData.mDefaultPath);
+   #if defined(TORQUE_OS_WIN)
+   defaultPath.replace("/", "\\");
+   rootDir.replace("/", "\\");
+   #endif
+
+   if (mData.mStyle & FileDialogData::FDS_OPEN && !(mData.mStyle & FileDialogData::FDS_BROWSEFOLDER))
+   {
+         outPath = tinyfd_openFileDialog(title, defaultPath.c_str(), 0, NULL, NULL, 0);
+   }
+   else if (mData.mStyle & FileDialogData::FDS_SAVE && !(mData.mStyle & FileDialogData::FDS_BROWSEFOLDER))
+   {
+         outPath = tinyfd_saveFileDialog(title, defaultPath.c_str(), 0, NULL, NULL);
+   }
+   else if (mData.mStyle & FileDialogData::FDS_MULTIPLEFILES)
+   {
+         // tinyfd returns a string with '|' as separator for multiple files
+         outPath = tinyfd_openFileDialog(title, defaultPath.c_str(), 0, NULL, NULL, 1);
+   }
+   else if (mData.mStyle & FileDialogData::FDS_BROWSEFOLDER)
+   {
+         outPath = tinyfd_selectFolderDialog(title, defaultPath.c_str());
+   }
+
+   // Check if user cancelled (tinyfd returns NULL on cancel)
+   if (!outPath)
+   {
+         return false;
+   }
+
+
+   // Handle the result path
+   String resultPath = String(outPath);
+   resultPath.replace("\\", "/");
+   resultPath.replace(rootDir, "");
+   while (resultPath.isNotEmpty() && (resultPath[0] == '/' || resultPath[0] == '\\'))
+   {
+         resultPath.erase(0, 1);
+   }
+
+
+
+   // Multiple Files Parsing (tinyfd specific)
+   if (mData.mStyle & FileDialogData::FDS_MULTIPLEFILES)
+   {
+         // Since tinyfd returns a single string separated by '|', we split it
+         Vector<String> files;
+         String(outPath).split("|", files);
+
+         U32 fileCount = files.size();
+         for (U32 i = 0; i < fileCount; ++i)
+         {
+               setDataField(StringTable->insert("files"), Con::getIntArg(i), files[i].c_str());
+         }
+         setDataField(StringTable->insert("fileCount"), NULL, Con::getIntArg(fileCount));
+   }
+   else
+   {
+         // Single file selection
+         if(mForceRelativePath)
+               mData.mFile = Con::getReturnBuffer(Platform::makeRelativePathName(resultPath.c_str(), NULL));
+         else
+               mData.mFile = Con::getReturnBuffer(resultPath.c_str());
+   }
+
+
+   //FIXME DEBUG:
+#ifdef TORQUE_DEBUG
+
+Con::printf("DEBUG: resultPath = %s ", resultPath.c_str());
+Con::printf("DEBUG: mData.mFile = %s (forceRelativePath=%d)", mData.mFile, mForceRelativePath);
+   Con::printf("DEBUG: outPath (Raw): %s", outPath);
+   Con::printf("DEBUG: rootDir: %s", rootDir.c_str());
+   Con::printf("DEBUG: CurrentDir: %s", Platform::getCurrentDirectory());
+#endif
+
+
+/*
+   //ported to tinyfiledialogs
+
    // Execute Dialog (Blocking Call)
    nfdchar_t *outPath = NULL;
    nfdpathset_t pathSet;
@@ -327,7 +419,10 @@ bool FileDialog::Execute()
          setDataField(StringTable->insert("fileCount"), NULL, "1");
       }
 
-   }
+   }*/
+
+   // <<<<<<<<<<<<<<<<< porting ~~~~~~~~~~~~~~~~~~
+
 
    // Return success.
    return true;

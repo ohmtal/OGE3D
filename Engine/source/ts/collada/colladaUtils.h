@@ -275,8 +275,8 @@ namespace ColladaUtils
    void exportColladaScene(tinyxml2::XMLElement* rootNode, const ExportData& exportData, const String& meshName);
 
    // Export an OptimizedPolyList to a simple Collada file
-   void exportToCollada(const Torque::Path& colladaFile, const OptimizedPolyList& mesh, const String& meshName = String::EmptyString);
-   void exportToCollada(const Torque::Path& colladaFile, const ExportData& exportData);
+   bool exportToCollada(const Torque::Path& colladaFile, const OptimizedPolyList& mesh, const String& meshName = String::EmptyString);
+   bool exportToCollada(const Torque::Path& colladaFile, const ExportData& exportData);
 };
 
 //-----------------------------------------------------------------------------

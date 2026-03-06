@@ -485,45 +485,47 @@ if(TORQUE_SDL)
       addPathRec("${srcDir}/gfx/gl/sdl")
     endif()
 
-    if(UNIX AND NOT APPLE)
-       #set(CMAKE_SIZEOF_VOID_P 4) #force 32 bit
-       set(ENV{CFLAGS} "${CXX_FLAG32} -g -O3")
-       if("${TORQUE_ADDITIONAL_LINKER_FLAGS}" STREQUAL "")
-         set(ENV{LDFLAGS} "${CXX_FLAG32}")
-       else()
-         set(ENV{LDFLAGS} "${CXX_FLAG32} ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-       endif()
+    addLib(libtinyfiledialogs)
 
-       find_package(PkgConfig REQUIRED)
-       pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-
-       # Setup CMake to use GTK+, tell the compiler where to look for headers
-       # and to the linker where to look for libraries
-       include_directories(${GTK3_INCLUDE_DIRS})
-       link_directories(${GTK3_LIBRARY_DIRS})
-
-       # Add other flags to the compiler
-       add_definitions(${GTK3_CFLAGS_OTHER})
-
-       if(TORQUE_USE_ZENITY)
-          set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "nfd_gtk.c" )
-       else()
-          set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
-       endif()
-       addLib(nativeFileDialogs)
-
-       set(BLACKLIST ""  )
-       target_link_libraries(nativeFileDialogs ${GTK3_LIBRARIES})
-  elseif(APPLE)
-      set(BLACKLIST "nfd_gtk.c" "nfd_win.cpp" )
-      addLib(nativeFileDialogs)
-      set(BLACKLIST ""  )
- 	else()
- 	   set(BLACKLIST "nfd_gtk.c" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
- 	   addLib(nativeFileDialogs)
-     set(BLACKLIST ""  )
- 	   addLib(comctl32)
-  endif()
+  #   if(UNIX AND NOT APPLE)
+  #      #set(CMAKE_SIZEOF_VOID_P 4) #force 32 bit
+  #      set(ENV{CFLAGS} "${CXX_FLAG32} -g -O3")
+  #      if("${TORQUE_ADDITIONAL_LINKER_FLAGS}" STREQUAL "")
+  #        set(ENV{LDFLAGS} "${CXX_FLAG32}")
+  #      else()
+  #        set(ENV{LDFLAGS} "${CXX_FLAG32} ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
+  #      endif()
+  #
+  #      find_package(PkgConfig REQUIRED)
+  #      # pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+  #      #
+  #      # # Setup CMake to use GTK+, tell the compiler where to look for headers
+  #      # # and to the linker where to look for libraries
+  #      # include_directories(${GTK3_INCLUDE_DIRS})
+  #      # link_directories(${GTK3_LIBRARY_DIRS})
+  #      #
+  #      # # Add other flags to the compiler
+  #      # add_definitions(${GTK3_CFLAGS_OTHER})
+  #      #
+  #      # if(TORQUE_USE_ZENITY)
+  #      #    set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "nfd_gtk.c" )
+  #      # else()
+  #      #    set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
+  #      # endif()
+  #      # addLib(nativeFileDialogs)
+  #      #
+  #      # set(BLACKLIST ""  )
+  #      # target_link_libraries(nativeFileDialogs ${GTK3_LIBRARIES})
+  # elseif(APPLE)
+  #     # set(BLACKLIST "nfd_gtk.c" "nfd_win.cpp" )
+  #     # addLib(nativeFileDialogs)
+  #     # set(BLACKLIST ""  )
+ 	# else()
+ 	#    # set(BLACKLIST "nfd_gtk.c" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
+ 	#    # addLib(nativeFileDialogs)
+  #    # set(BLACKLIST ""  )
+ 	#    addLib(comctl32)
+  # endif()
 
     #override and hide SDL2 cache variables
     #set apple to sue sdl static lib, other platforms use dynamic
@@ -866,7 +868,7 @@ addInclude("${libDir}/opcode")
 addInclude("${libDir}/collada/include")
 addInclude("${libDir}/collada/include/1.4")
 if(TORQUE_SDL)
-   addInclude("${libDir}/nativeFileDialogs/include")
+   addInclude("${libDir}/libtinyfiledialogs")
 endif()
 if(TORQUE_OPENGL)
 	addInclude("${libDir}/glad/include")

@@ -4056,7 +4056,10 @@ void WorldEditor::makeSelectionAMesh(const char *filename)
    }
 
    // Use a ColladaUtils function to do the actual export to a Collada file
-   ColladaUtils::exportToCollada(filename, exportData);
+   // XXTH check if it failed !!
+   if (!ColladaUtils::exportToCollada(filename, exportData)) {
+         return;
+   }
    //
 
    // Allocate TSStatic object and add to level.

@@ -2914,7 +2914,7 @@ void ColladaUtils::exportColladaScene(tinyxml2::XMLElement* rootNode, const Expo
    instVisSceneNode->SetAttribute("url", "#RootNode");
 }
 
-void ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const OptimizedPolyList& mesh, const String& meshName)
+bool ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const OptimizedPolyList& mesh, const String& meshName)
 {
    // Get the mesh name
    String outMeshName = meshName;
@@ -2962,11 +2962,14 @@ void ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const Optimi
    char fullPath[MAX_PATH_LENGTH];
    Platform::makeFullPathName(colladaFile.getFullPath(), fullPath, MAX_PATH_LENGTH);
 
-   if (!doc.SaveFile(fullPath))
+   if (!doc.SaveFile(fullPath)){
       Con::errorf("ColladaUtils::exportToCollada(): Unable to export to %s", fullPath);
+      return false;
+   }
+   return true;
 }
 
-void ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const ExportData& exportData)
+bool ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const ExportData& exportData)
 {
    // Get the mesh name
    String outMeshName = colladaFile.getFileName();
@@ -3010,8 +3013,12 @@ void ColladaUtils::exportToCollada(const Torque::Path& colladaFile, const Export
    char fullPath[MAX_PATH_LENGTH];
    Platform::makeFullPathName(colladaFile.getFullPath(), fullPath, MAX_PATH_LENGTH);
 
-   if (!doc.SaveFile(fullPath))
+   if (!doc.SaveFile(fullPath)) {
       Con::errorf("ColladaUtils::exportToCollada(): Unable to export to %s", fullPath);
+      return false;
+   }
+   return true;
+
 }
 
 void ColladaUtils::ExportData::processData()
