@@ -635,6 +635,15 @@ if( TORQUE_OPENGL )
 endif()
 
 ###############################################################################
+# FreeBSD fix:
+if(UNIX AND NOT APPLE)
+     find_package(PkgConfig REQUIRED)
+     pkg_check_modules(X11 REQUIRED x11)
+     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${X11_LDFLAGS}")
+      include_directories(${X11_INCLUDE_DIRS})
+endif()
+
+
 ###############################################################################
 if(NOT OGE3D_DELAY_FINISH)
     finishExecutable()
