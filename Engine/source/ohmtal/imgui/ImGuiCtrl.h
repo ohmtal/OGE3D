@@ -9,25 +9,73 @@
 #ifndef _IMGUI_CTRL_H_
 #define _IMGUI_CTRL_H_
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif
+
 #include "gui/containers/guiContainer.h"
 #include "imgui.h"
-#include "backends/imgui_impl_sdl2.h" // FIXME SDL3 later
-#include "backends/imgui_impl_opengl3.h" //FIXME Windows !!
-
+#include "backends/imgui_impl_sdl2.h" // FIXME SDL3 .. when ready
+#include "backends/imgui_impl_opengl3.h" //FIXME DirectX  ?!!
 #include "windowManager/sdl/sdlWindow.h"
+
+#include <functional>
+#include <vector>
+
+// ImGui Drawcalls
+using ImGuiDrawCall = std::function<void(Point2I offset, const RectI &updateRect)>;
+
 
 class ImGuiCtrl : public GuiContainer
 {
     typedef GuiContainer Parent;
+
+    struct DrawCallEntry {
+        U32 id;
+        ImGuiDrawCall onDraw;
+    };
+    inline static std::vector<DrawCallEntry> smDrawCallers;
+    inline static U32 smNextId = 0;
+
+public:
+    static U32 addDrawCaller(ImGuiDrawCall drawCaller) {
+        U32 id = ++smNextId;
+        smDrawCallers.push_back({id, drawCaller});
+        return id;
+    }
+
+    static void removeDrawCaller(U32 id) {
+        std::erase_if(smDrawCallers, [id](const auto& entry) {
+            return entry.id == id;
+        });
+    }
+
 
 protected:
     bool mInitialized;
     static bool smGlobalImGuiInitialized;
     U32 mListenerId;
 
+    ImGuiIO* mGuiIO = nullptr;
+    ImGuiStyle mBaseStyle;
+    bool mEnableDockSpace = true;
+    ImGuiID mDockSpaceId;
+    const char* mIniFileName = nullptr;
+
+
 public:
     ImGuiCtrl();
     virtual ~ImGuiCtrl();
+
+    // ImGui Stuff ...
+    ImGuiIO* getGuiIO() { return mGuiIO; }
+    ImGuiStyle getBaseStyle()  const { return  mBaseStyle; }
+    void setEnableDockSpace( bool value ) { mEnableDockSpace = value; }
+    bool getEnableDockSpace() { return mEnableDockSpace; }
+    ImGuiID getDockSpaceId() { return mDockSpaceId; }
+    bool Initialize();
+    void Deinitialize();
+
 
     // Torque3D Object Requirements
     DECLARE_CONOBJECT(ImGuiCtrl);
@@ -40,6 +88,9 @@ public:
 
     // Input Redirection
     virtual bool onInputEvent(const InputEventInfo &event);
+
+    // ImGui Render Call
+    virtual void onImGuiRender(Point2I offset, const RectI &updateRect);
 };
 
 #endif

@@ -69,15 +69,17 @@ class CompMove : public CompBase
    static void initPersistFields();
 
 public:
+
+
    CompMove() :
       mSpeed(0.f)
       , mDirection(0.f, 0.f, 0.f)
       , mRotateObject(false)
       , mMoveToDestination(false)
-      , mMoveSpeed(0.f)
-      , mDestination(0.f, 0.f, 0.f)
       , mMoveToleranz(1.f)
+      , mMoveSpeed(0.f)
       , mSlowDownFact(0.f)
+      , mDestination(0.f, 0.f, 0.f)
       , mDropOnTerrain(false)
       , mTerrainOffsetZ(0.f)
       , mPath(NULL)

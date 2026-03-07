@@ -64,10 +64,10 @@ if(UNIX)
 
     # -------
 
-    set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
-    enable_language(ASM_NASM)
-    set(CMAKE_CXX_STANDARD 11)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    # set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
+    # enable_language(ASM_NASM)
+    # set(CMAKE_CXX_STANDARD 11)
+    # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 # target_compile_options(${TORQUE_APP_NAME} PRIVATE -Wundef)

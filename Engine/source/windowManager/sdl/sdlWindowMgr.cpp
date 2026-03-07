@@ -33,7 +33,7 @@
 
 void sdl_CloseSplashWindow(void* hinst);
 
-std::vector<SDLEventListener> PlatformWindowManagerSDL::smEventListeners; //XXTH
+// std::vector<SDLEventListener> PlatformWindowManagerSDL::smEventListeners; //XXTH
 
 #ifdef TORQUE_SDL
 
@@ -313,16 +313,20 @@ void PlatformWindowManagerSDL::_process()
    SDL_Event evt;
    while( SDL_PollEvent(&evt) )
    {      
+
+       // FIXME how to fix focus ?
        // XXTH event listener >>>
        bool consumed = false;
        for (auto& listener : smEventListeners) {
-           if (listener(&evt)) {
+           if (listener.callback(&evt)) {
                consumed = true;
                break;
            }
        }
        if (consumed) continue;
        //<<<
+
+
       if (evt.type >= SDL_JOYAXISMOTION && evt.type <= SDL_CONTROLLERDEVICEREMAPPED)
       {
          SDLInputManager* mgr = static_cast<SDLInputManager*>(Input::getManager());
@@ -423,23 +427,16 @@ void PlatformWindowManagerSDL::_process()
          }
 
          case(SDL_TEXTEDITING): //XXTH often called! 
-#ifdef TORQUE_DEBUG
-            Con::warnf("got SDL_TEXTEDITING ... unhandled.");
-#endif 
             break;
          case(SDL_CLIPBOARDUPDATE):
-#ifdef TORQUE_DEBUG
-            Con::warnf("got SDL_CLIPBOARDUPDATE ... unhandled.");
-#endif 
             break;
 
          default:
          {
-#ifdef TORQUE_DEBUG
-            Con::warnf("Unhandled SDL event: 0x%04x", evt.type);
-#endif
          }
       }
+
+
    }
 
    // After the event loop is processed, we can now see if we have to notify
@@ -457,6 +454,8 @@ void PlatformWindowManagerSDL::_process()
       // Done until we need to update it again.
       mInputState = KeyboardInputState::NONE;
    }
+
+
 }
 
 PlatformWindow * PlatformWindowManagerSDL::getWindowById( WindowId id )

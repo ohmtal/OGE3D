@@ -10,8 +10,8 @@
     - [X] update tinyxml
     - [X] replaced native file dialogs with tiny file dialogs 
 - [ ] imgui testing 
-    - [ ] add to lib (cmake)
-    - [ ] evalute where to bind the the "glue"
+    - [X] add to lib (cmake)
+    - [X] "glue" ImGuiCtrl Object added 
     - [ ] Nice to have: Torque Script editor in game :D 
         - [ ] parse for files => file browser 
         - [ ] syntax highlight 

@@ -43,33 +43,32 @@ using SDLEventListener = std::function<bool(const void* sdlEvent)>;
 /// SDL2 implementation of the window manager interface.
 class PlatformWindowManagerSDL : public PlatformWindowManager
 {
-   static std::vector<SDLEventListener> smEventListeners; //XXTH
+   // static std::vector<SDLEventListener> smEventListeners; //XXTH
 
-   //FIXME c++20 not working !!
-   // struct ListenerEntry {
-   //    U32 id;
-   //    SDLEventListener callback;
-   // };
-   // inline static std::vector<ListenerEntry> smEventListeners;
-   // inline static U32 smNextId = 0;
+   struct ListenerEntry {
+      U32 id;
+      SDLEventListener callback;
+   };
+   inline static std::vector<ListenerEntry> smEventListeners;
+   inline static U32 smNextId = 0;
 
 public:
    // XXTH adding event listener !!
-   static void addEventListener(SDLEventListener listener) {
-      smEventListeners.push_back(listener);
+   // static void addEventListener(SDLEventListener listener) {
+   //    smEventListeners.push_back(listener);
+   // }
+
+   static U32 addEventListener(SDLEventListener listener) {
+      U32 id = ++smNextId;
+      smEventListeners.push_back({id, listener});
+      return id;
    }
 
-// FIXME c++ 20 not working !!
-//    static U32 addEventListener(SDLEventListener listener) {
-//       U32 id = ++smNextId;
-//       smEventListeners.push_back({id, listener});
-//       return id;
-//    }
-//
-//    static void removeEventListener(U32 id) {
-//       std::erase_if(smEventListeners, [id](const auto& entry) {
-//          return entry.id == id;
-//       });
+   static void removeEventListener(U32 id) {
+      std::erase_if(smEventListeners, [id](const auto& entry) {
+         return entry.id == id;
+      });
+   }
 
    /// An enum that holds an event loop frame of the state of the
    /// keyboard for how the keyboard is interpreted inside of Torque.
