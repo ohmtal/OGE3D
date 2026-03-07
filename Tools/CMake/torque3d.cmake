@@ -745,8 +745,12 @@ endif()
 if(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     find_package(OpenGL REQUIRED)
+
+    # Ensure /usr/local/lib is in search path for FreeBSD/Linux
+    link_directories(/usr/local/lib)
     
     # Use CMake-found libraries instead of hardcoded names
+    # Fallback to names if find_package returns incomplete paths
     set(TORQUE_EXTERNAL_LIBS 
         ${X11_LIBRARIES} 
         ${OPENGL_LIBRARIES} 
