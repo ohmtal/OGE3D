@@ -682,7 +682,7 @@ bool GuiWindowCtrl::onWake()
    }
 
    mBitmapBounds = mProfile->mBitmapArrayRects.address();
-   S32 buttonHeight = mBitmapBounds[BmpStates * BmpClose].extent.y;
+   S32 buttonHeight = mBitmapBounds[(S32)BmpStates * (S32)BmpClose].extent.y;
 
    mTitleHeight = buttonHeight + 4;
 
@@ -1369,7 +1369,8 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    // Draw the close button
    Point2I tempUL;
    Point2I tempLR;
-   S32 bmp = BmpStates * BmpClose;
+   S32 bmp = static_cast<int>(BmpStates) * static_cast<int>(BmpClose);
+   // S32 bmp = BmpStates * BmpClose;
 
    if( mCanClose ) {
       if( mCloseButton.pointInRect( mMousePosition ) )
@@ -1386,9 +1387,14 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    // Draw the maximize button
    if( mMaximized )
-      bmp = BmpStates * BmpNormal;
+      bmp = static_cast<int>(BmpStates) * static_cast<int>(BmpNormal);
    else
-      bmp = BmpStates * BmpMaximize;
+      bmp = static_cast<int>(BmpStates) * static_cast<int>(BmpMinimize);
+
+   // if( mMaximized )
+   //    bmp = BmpStates * BmpNormal;
+   // else
+   //    bmp = BmpStates * BmpMaximize;
 
    if( mCanMaximize ) {
       if( mMaximizeButton.pointInRect( mMousePosition ) )
@@ -1405,9 +1411,14 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    // Draw the minimize button
    if( mMinimized )
-      bmp = BmpStates * BmpNormal;
+      bmp = static_cast<int>(BmpStates) * static_cast<int>(BmpNormal);
    else
-      bmp = BmpStates * BmpMinimize;
+      bmp = static_cast<int>(BmpStates) * static_cast<int>(BmpMinimize);
+
+   // if( mMinimized )
+   //    bmp = BmpStates * BmpNormal;
+   // else
+   //    bmp = BmpStates * BmpMinimize;
 
    if( mCanMinimize ) {
       if( mMinimizeButton.pointInRect( mMousePosition ) )
@@ -1474,8 +1485,8 @@ void GuiWindowCtrl::positionButtons(void)
    if( !mBitmapBounds || !mAwake )
       return;
 
-   S32 buttonWidth = mBitmapBounds[BmpStates * BmpClose].extent.x;
-   S32 buttonHeight = mBitmapBounds[BmpStates * BmpClose].extent.y;
+   S32 buttonWidth = mBitmapBounds[(S32)BmpStates * (S32)BmpClose].extent.x;
+   S32 buttonHeight = mBitmapBounds[(S32)BmpStates * (S32)BmpClose].extent.y;
    Point2I mainOff = mProfile->mTextOffset;
 
    // Until a pref, if alignment is LEFT, put buttons RIGHT justified.

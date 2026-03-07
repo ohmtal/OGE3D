@@ -250,7 +250,7 @@ void afxXM_Oscillate_rot::updateParams(F32 dt, F32 elapsed, afxXM_Params& params
   F32 wt_factor = calc_weight_factor(elapsed);
 
   F32 t = mSin(db->speed*elapsed);  // [-1,1]
-  F32 theta = lerp((t+1)/2, db->min.x*wt_factor, db->max.x*wt_factor);
+  F32 theta = afx::lerp((t+1)/2, db->min.x*wt_factor, db->max.x*wt_factor);
   theta = mDegToRad(theta);
 
   AngAxisF rot_aa(db->axis, theta);
@@ -272,7 +272,7 @@ void afxXM_Oscillate_scale::updateParams(F32 dt, F32 elapsed, afxXM_Params& para
   F32 wt_factor = calc_weight_factor(elapsed);
 
   F32 t = mSin(db->speed*elapsed);  // [-1,1]
-  F32 s = lerp((t+1)/2, db->min.x*wt_factor, db->max.x*wt_factor);
+  F32 s = afx::lerp((t+1)/2, db->min.x*wt_factor, db->max.x*wt_factor);
   Point3F xm_scale = db->axis*s;
   
   if (db->additive_scale)

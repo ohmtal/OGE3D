@@ -357,6 +357,8 @@ public:
    ///set our defaults to be the same as no reverb otherwise our reverb
    ///effects menu sounds
    SFXReverbProperties()
+   : flReflectionsPan{0.0f, 0.0f, 0.0f}
+   , flLateReverbPan{0.0f, 0.0f, 0.0f}
    {
       flDensity = 0.0f;
       flDiffusion = 0.0f;
@@ -368,10 +370,10 @@ public:
       flDecayLFRatio = 0.0f;
       flReflectionsGain = 0.0f;
       flReflectionsDelay = 0.0f;
-      flReflectionsPan[3] = 0.0f;
+      // flReflectionsPan[3] = 0.0f;
       flLateReverbGain = 0.0f;
       flLateReverbDelay = 0.0f;
-      flLateReverbPan[3] = 0.0f;
+      // flLateReverbPan[3] = 0.0f;
       flEchoTime = 0.0f;
       flEchoDepth = 0.0f;
       flModulationTime = 0.0f;
@@ -461,6 +463,8 @@ public:
    ///if you are going to use zone reverbs its
    ///probably best not to use per-voice reverb
    SFXSoundReverbProperties()
+   : flReflectionsPan{0.0f, 0.0f, 0.0f}
+   , flLateReverbPan{0.0f, 0.0f, 0.0f}
    {
       flDensity = 0.0f;
       flDiffusion = 0.0f;
@@ -472,10 +476,10 @@ public:
       flDecayLFRatio = 0.0f;
       flReflectionsGain = 0.0f;
       flReflectionsDelay = 0.0f;
-      flReflectionsPan[3] = 0.0f;
+      // flReflectionsPan[3] = 0.0f;
       flLateReverbGain = 0.0f;
       flLateReverbDelay = 0.0f;
-      flLateReverbPan[3] = 0.0f;
+      // flLateReverbPan[3] = 0.0f;
       flEchoTime = 0.0f;
       flEchoDepth = 0.0f;
       flModulationTime = 0.0f;

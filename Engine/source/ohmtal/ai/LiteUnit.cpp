@@ -737,7 +737,7 @@ bool LiteUnit::updatePos(const F32 travelTime)
    {
       gServerContainer.initRadiusSearch(end, 2.0f, TriggerObjectType);
       S32 id;
-      while (id = gServerContainer.containerSearchNext())
+      while ((id = gServerContainer.containerSearchNext()))
       {
          Trigger* trigger = dynamic_cast<Trigger*>(Sim::findObject(id));
          if (trigger)

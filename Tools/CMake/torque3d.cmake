@@ -22,6 +22,9 @@
 
 project(${TORQUE_APP_NAME})
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # if(UNIX)
 #     if(NOT CXX_FLAG32)
 #         set(CXX_FLAG32 "")
@@ -39,16 +42,12 @@ project(${TORQUE_APP_NAME})
 #    endif()
 #
 # 	# for asm files
-# 	SET (CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
-# 	ENABLE_LANGUAGE (ASM_NASM)
+# 	# SET (CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
+# 	# ENABLE_LANGUAGE (ASM_NASM)
 #
-#     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 # endif()
 
-# XXTH
-# set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX)
     add_compile_options(-msse -pipe -Wfatal-errors)
@@ -60,7 +59,7 @@ if(UNIX)
         add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-return-type-c-linkage>)
         add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-unused-local-typedef>)
     endif()
-
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register>)
 
     # -------
 
@@ -705,8 +704,11 @@ if (TORQUE_OPENGL)
    #      find_package(PkgConfig REQUIRED)
    #      pkg_check_modules(X11 REQUIRED x11)
    # endif()
+   #
+   # FIXME somewhere else ?!
     if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
         include_directories(/usr/local/include)
+        link_directories(/usr/local/lib)
     endif()
    addLib(glad)
 endif()
@@ -897,8 +899,12 @@ if(TORQUE_OPENGL)
 endif()
 
 if(UNIX AND NOT APPLE)
-	addInclude("/usr/include/freetype2/freetype")
-	addInclude("/usr/include/freetype2")
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(FREETYPE REQUIRED freetype2)
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+
+	# addInclude("/usr/include/freetype2/freetype")
+	# addInclude("/usr/include/freetype2")
 endif()
 
 # external things

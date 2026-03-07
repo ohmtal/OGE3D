@@ -869,6 +869,7 @@ bool AIEntity::getAIMove(Move *move)
 				move->yaw = getSteering()->getYawToDestination( getTargetPos() ,mMaxRotateRadiants );
 
 			break;
+        default: break;
 	} //switch Mode
 
     if (mJumpCnt > 0 ) 
@@ -1321,11 +1322,12 @@ void AIEntity::initAnimations() {
 	action_swimidle		= getActionbyName("swimidle");
    if (action_swimidle == -1)
       action_swimidle = getActionbyName("swim_root");
-   if (action_swimidle == -1)
-		if (action_swim == action_walk) 
-			action_swimidle = action_idle;
-		else
-			action_swimidle = action_swim;
+   if (action_swimidle == -1) {
+     if (action_swim == action_walk)
+       action_swimidle = action_idle;
+     else
+       action_swimidle = action_swim;
+   }
 
 
 	action_fly		= getActionbyName("fly");
@@ -1786,11 +1788,10 @@ void AIEntity::updateActionThread()
 			return;
 
 
-   if(mActionAnimation.action != -1)
-      if (mActionAnimation.forward)
-         mActionAnimation.atEnd = mShapeInstance->getPos(mActionAnimation.thread) == 1;
-      else
-         mActionAnimation.atEnd = mShapeInstance->getPos(mActionAnimation.thread) == 0;
+   if(mActionAnimation.action != -1) {
+      if (mActionAnimation.forward)  mActionAnimation.atEnd = mShapeInstance->getPos(mActionAnimation.thread) == 1;
+      else mActionAnimation.atEnd = mShapeInstance->getPos(mActionAnimation.thread) == 0;
+   }
 
 	  
 
@@ -1828,7 +1829,7 @@ void AIEntity::updateActionThread()
 
             if (gClientContainer.castRay(Point3F(pos.x, pos.y, pos.z + 0.01f),
                Point3F(pos.x, pos.y, pos.z - 2.0f),
-               STATIC_COLLISION_TYPEMASK | VehicleObjectType, &rInfo))
+                                 (U32)STATIC_COLLISION_TYPEMASK | (U32)VehicleObjectType, &rInfo))
             {
                Material* material = (rInfo.material ? dynamic_cast<Material*>(rInfo.material->getMaterial()) : 0);
 
@@ -3873,7 +3874,7 @@ U32 AIEntity::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
       stream->writeFlag(!(mask & NoWarpMask));
    }
    // Ghost need energy to predict reliably
-#pragma message("Energy update really every update?!")
+// #pragma message("Energy update really every update?!")
    
 //XXTH 1.97 bad if maxenery id ZERO!   stream->writeFloat(getEnergyLevel() / getMaxEnergy(),EnergyLevelBits);
    stream->writeFloat(getEnergyValue(),EnergyLevelBits);

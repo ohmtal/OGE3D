@@ -104,6 +104,10 @@ class GuiWindowCtrl : public GuiContainer
       /// Allow resizing width of window.
       bool mResizeWidth;
       
+      /// Resizing Edges Mask (See Edges Enumeration)
+      S32 mResizeEdge;
+
+
       /// Allow resizing height of window.
       bool mResizeHeight;
       
@@ -140,7 +144,6 @@ class GuiWindowCtrl : public GuiContainer
       /// Window title string.
       String mText;
       
-      S32 mResizeEdge; ///< Resizing Edges Mask (See Edges Enumeration)
 
       S32 mTitleHeight;
 

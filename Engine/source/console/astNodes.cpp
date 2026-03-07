@@ -889,6 +889,8 @@ U32 IntNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          break;
       case TypeReqNone:
          break;
+      default:
+         break;
    }
    return codeStream.tell();
 }
@@ -923,6 +925,7 @@ U32 FloatNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          break;
       case TypeReqNone:
          break;
+      default: break;
    }
    return codeStream.tell();
 }
@@ -979,6 +982,7 @@ U32 StrConstNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          break;
       case TypeReqNone:
          break;
+      default: break;
    }
    return codeStream.tell();
 }
@@ -1019,6 +1023,7 @@ U32 ConstantNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          break;
       case TypeReqNone:
          break;
+      default: break;
    }
    return ip;
 }
@@ -1623,6 +1628,7 @@ U32 SlotAccessNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          break;
       case TypeReqNone:
          break;
+      default: break;
    }
    return codeStream.tell();
 }
