@@ -157,6 +157,10 @@ public:
 
    bool glUseMap() const { return mUseGlMap; }   
       
+   //XXTH for ImGui
+   void* getContext() const  { return mContext; }
+
+
 protected:   
    /// Called by GFXDevice to create a device specific stateblock
    virtual GFXStateBlockRef createStateBlockInternal(const GFXStateBlockDesc& desc);
@@ -198,6 +202,7 @@ protected:
 
    virtual void setVertexStream( U32 stream, GFXVertexBuffer *buffer );
    virtual void setVertexStreamFrequency( U32 stream, U32 frequency );   
+
 
 private:
    typedef GFXDevice Parent;

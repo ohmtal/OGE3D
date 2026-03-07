@@ -33,12 +33,16 @@
 
 void sdl_CloseSplashWindow(void* hinst);
 
+std::vector<SDLEventListener> PlatformWindowManagerSDL::smEventListeners; //XXTH
+
 #ifdef TORQUE_SDL
 
 PlatformWindowManager * CreatePlatformWindowManager()
 {
    return new PlatformWindowManagerSDL();
 }
+
+
 
 #endif
 
@@ -260,58 +264,6 @@ PlatformWindow *PlatformWindowManagerSDL::createWindow(GFXDevice *device, const 
       window->setIcon(iconPath.getFullPath());
 
 
-
-/* XXTH 2024-01-07 use the new setIcon which supports bmp :P
-   if (iconPath.getExtension() == String("bmp"))
-   {
-      Con::errorf("Unable to use bmp format images for the window icon. Please use a different format.");
-   }
-   else
-   {
-      Resource<GBitmap> img = GBitmap::load(iconPath);
-      if (img != NULL)
-      {
-         U32 pitch;
-         U32 width = img->getWidth();
-         bool hasAlpha = img->getHasTransparency();
-         U32 depth;
-
-         if (hasAlpha)
-         {
-            pitch = 4 * width;
-            depth = 32;
-         }
-         else
-         {
-            pitch = 3 * width;
-            depth = 24;
-         }
-
-         Uint32 rmask, gmask, bmask, amask;
-         if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-         {
-            S32 shift = hasAlpha ? 8 : 0;
-            rmask = 0xff000000 >> shift;
-            gmask = 0x00ff0000 >> shift;
-            bmask = 0x0000ff00 >> shift;
-            amask = 0x000000ff >> shift;
-         }
-         else
-         {
-            rmask = 0x000000ff;
-            gmask = 0x0000ff00;
-            bmask = 0x00ff0000;
-            amask = hasAlpha ? 0xff000000 : 0;
-         }
-
-         SDL_Surface* iconSurface = SDL_CreateRGBSurfaceFrom(img->getAddress(0, 0), img->getWidth(), img->getHeight(), depth, pitch, rmask, gmask, bmask, amask);
-
-         SDL_SetWindowIcon(window->mWindowHandle, iconSurface);
-
-         SDL_FreeSurface(iconSurface);
-      }
-   }
-*/
    if(device)
    {
       window->mDevice = device;
@@ -361,6 +313,16 @@ void PlatformWindowManagerSDL::_process()
    SDL_Event evt;
    while( SDL_PollEvent(&evt) )
    {      
+       // XXTH event listener >>>
+       bool consumed = false;
+       for (auto& listener : smEventListeners) {
+           if (listener(&evt)) {
+               consumed = true;
+               break;
+           }
+       }
+       if (consumed) continue;
+       //<<<
       if (evt.type >= SDL_JOYAXISMOTION && evt.type <= SDL_CONTROLLERDEVICEREMAPPED)
       {
          SDLInputManager* mgr = static_cast<SDLInputManager*>(Input::getManager());

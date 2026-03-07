@@ -46,7 +46,8 @@ project(${TORQUE_APP_NAME})
 # endif()
 
 # XXTH
-set(CMAKE_CXX_STANDARD 11)
+# set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX)
@@ -308,11 +309,17 @@ addPath("${srcDir}/ohmtal/components")
 addPathRec("${srcDir}/ohmtal/graph")
 addPathRec("${srcDir}/ohmtal/sound")
 addPathRec("${srcDir}/ohmtal/sim")
+# experimental opengl/sdl2 only
+if(TORQUE_SDL AND UNIX)
+addPathRec("${srcDir}/ohmtal/imgui")
+endif()
 
+#FIXME should be moved to lib!
 addPathRec("${srcDir}/Box2D")
 
 
 addPath("${srcDir}/platform")
+# FIXME why ?
 if(NOT TORQUE_SDL)
    set(BLACKLIST "fileDialog.cpp" )
 endif()
@@ -485,6 +492,7 @@ if(TORQUE_SDL)
       addPathRec("${srcDir}/gfx/gl/sdl")
     endif()
 
+    # FIXME only SDL ???
     addLib(libtinyfiledialogs)
 
   #   if(UNIX AND NOT APPLE)
@@ -538,6 +546,12 @@ if(TORQUE_SDL)
     endif()
     add_subdirectory( ${libDir}/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl2 EXCLUDE_FROM_ALL)
     link_directories( ${libDir}/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl2)
+
+    include_directories("${libDir}/sdl/include")
+    if (UNIX)
+    addLib(imgui)
+    endif()
+
 endif()
 
 if(TORQUE_DEDICATED)
@@ -869,6 +883,7 @@ addInclude("${libDir}/collada/include")
 addInclude("${libDir}/collada/include/1.4")
 if(TORQUE_SDL)
    addInclude("${libDir}/libtinyfiledialogs")
+   addInclude("${libDir}/imgui")
 endif()
 if(TORQUE_OPENGL)
 	addInclude("${libDir}/glad/include")
