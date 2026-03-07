@@ -4,6 +4,8 @@
 //-----------------------------------------------------------------------------
 // ImGuiCaller Base Class
 //-----------------------------------------------------------------------------
+// * ImGuiCaller automaticly deleted when the ImGuiCtrl is deleted!
+//-----------------------------------------------------------------------------
 
 // #include "console/simObject.h"
 // #include "ohmtal/imgui/ImGuiCtrl.h"
@@ -35,9 +37,9 @@ bool ImGuiCaller::Connect(ImGuiCtrl* ctrl) {
             onImGuiRender(offset, updateRect);
         },
         [this]() {
-            //deferred ?
-            this->deleteObject();
 
+            //deferred
+            Sim::postEvent(this, new DeferredDeleteActionEvent(this), Sim::getCurrentTime()+100);
         }
     );
     return true;

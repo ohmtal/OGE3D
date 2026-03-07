@@ -135,8 +135,10 @@ void ImGuiCtrl::Deinitialize() {
     //     SettingsManager().save();
     // }
 
-    for (auto& drawCallers : smDrawCallers) {
-        drawCallers.onRemove();
+    for (auto& drawCaller : smDrawCallers) {
+        if (drawCaller.onRemove) {
+            drawCaller.onRemove();
+        }
     }
 
 
@@ -264,8 +266,10 @@ void ImGuiCtrl::onImGuiRender(Point2I offset, const RectI& updateRect){
     // <<<<<<<<<<<<<<<<<< IMGUI test code
 
 
-    for (auto& drawCallers : smDrawCallers) {
-        drawCallers.onDraw(offset, updateRect);
+    for (auto& drawCaller : smDrawCallers) {
+        if (drawCaller.onDraw) {
+            drawCaller.onDraw(offset, updateRect);
+        }
     }
 
 

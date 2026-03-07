@@ -33,8 +33,8 @@ class ImGuiCtrl : public GuiContainer
 
     struct DrawCallEntry {
         U32 id;
-        ImGuiDrawCall onDraw;
-        ImGuiRemoveCall onRemove;
+        ImGuiDrawCall onDraw = nullptr;
+        ImGuiRemoveCall onRemove = nullptr;
     };
     inline static std::vector<DrawCallEntry> smDrawCallers;
     inline static U32 smNextId = 0;
