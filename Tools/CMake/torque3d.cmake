@@ -743,12 +743,27 @@ if (APPLE)
 endif()
 
 if(UNIX AND NOT APPLE)
-    # copy pasted from T3D build system, some might not be needed
-	set(TORQUE_EXTERNAL_LIBS "dl Xxf86vm Xext X11 Xft stdc++ pthread GL" CACHE STRING "external libs to link against")
-	mark_as_advanced(TORQUE_EXTERNAL_LIBS)
+    find_package(X11 REQUIRED)
+    find_package(OpenGL REQUIRED)
+    
+    # Use CMake-found libraries instead of hardcoded names
+    set(TORQUE_EXTERNAL_LIBS 
+        ${X11_LIBRARIES} 
+        ${OPENGL_LIBRARIES} 
+        Xxf86vm 
+        Xext 
+        Xft 
+        dl 
+        stdc++ 
+        pthread
+    )
+    
+    # Ensure include directories for X11 are added if found
+    if(X11_INCLUDE_DIR)
+        include_directories(${X11_INCLUDE_DIR})
+    endif()
 
-    string(REPLACE " " ";" TORQUE_EXTERNAL_LIBS_LIST ${TORQUE_EXTERNAL_LIBS})
-    addLib( "${TORQUE_EXTERNAL_LIBS_LIST}" )
+    addLib("${TORQUE_EXTERNAL_LIBS}")
 endif()
 
 ###############################################################################
