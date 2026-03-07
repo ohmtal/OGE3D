@@ -24,6 +24,7 @@
 
 // ImGui Drawcalls
 using ImGuiDrawCall = std::function<void(Point2I offset, const RectI &updateRect)>;
+using ImGuiRemoveCall = std::function<void()>;
 
 
 class ImGuiCtrl : public GuiContainer
@@ -33,14 +34,15 @@ class ImGuiCtrl : public GuiContainer
     struct DrawCallEntry {
         U32 id;
         ImGuiDrawCall onDraw;
+        ImGuiRemoveCall onRemove;
     };
     inline static std::vector<DrawCallEntry> smDrawCallers;
     inline static U32 smNextId = 0;
 
 public:
-    static U32 addDrawCaller(ImGuiDrawCall drawCaller) {
+    static U32 addDrawCaller(ImGuiDrawCall drawCaller,  ImGuiRemoveCall removeCaller = nullptr) {
         U32 id = ++smNextId;
-        smDrawCallers.push_back({id, drawCaller});
+        smDrawCallers.push_back({id, drawCaller, removeCaller});
         return id;
     }
 
@@ -52,7 +54,7 @@ public:
 
 
 protected:
-    bool mInitialized;
+    bool mAwake;
     static bool smGlobalImGuiInitialized;
     U32 mListenerId;
 

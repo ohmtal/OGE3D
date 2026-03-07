@@ -43,8 +43,8 @@ IMPLEMENT_CONOBJECT(ImGuiCtrl);
 bool ImGuiCtrl::smGlobalImGuiInitialized = false;
 //-----------------------------------------------------------------------------
 bool ImGuiCtrl::Initialize(){
-    if (mInitialized || smGlobalImGuiInitialized) {
-        return false;
+    if (smGlobalImGuiInitialized) {
+        return true;
     };
 
     // Get Window Manager and First Window
@@ -125,7 +125,7 @@ bool ImGuiCtrl::Initialize(){
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::Deinitialize() {
 
-    if (mInitialized || smGlobalImGuiInitialized) {
+    if (!smGlobalImGuiInitialized) {
         return;
     };
     // FIXME SAVE SETTINGS
@@ -135,6 +135,12 @@ void ImGuiCtrl::Deinitialize() {
     //     SettingsManager().save();
     // }
 
+    for (auto& drawCallers : smDrawCallers) {
+        drawCallers.onRemove();
+    }
+
+
+
     PlatformWindowManagerSDL::removeEventListener(mListenerId);
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
@@ -143,7 +149,7 @@ void ImGuiCtrl::Deinitialize() {
 }
 
 //-----------------------------------------------------------------------------
-ImGuiCtrl::ImGuiCtrl() : mInitialized(false)
+ImGuiCtrl::ImGuiCtrl() : mAwake(false)
 {
     mActive = true;
 }
@@ -171,20 +177,20 @@ bool ImGuiCtrl::onWake()
         Initialize();
     }
 
-    mInitialized = true;
+    mAwake = true;
     return true;
 }
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::onSleep()
 {
     //bad idea :P PlatformWindowManagerSDL::removeEventListener(mListenerId);
-    mInitialized = false;
+    mAwake = false;
     Parent::onSleep();
 }
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-    if (!mInitialized)
+    if (!mAwake)
         return;
 
 

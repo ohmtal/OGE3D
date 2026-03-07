@@ -6,61 +6,25 @@
 //  $testCaller = new ImGuiTestCaller(); $testCaller.connect(ImGuiHud);
 
 
-#include "console/simObject.h"
-#include "ImGuiCtrl.h"
+// #include "console/simObject.h"
+// #include "ohmtal/imgui/ImGuiCtrl.h"
+// #include "ohmtal/sim/DeferredDelete.h"
+#include "ohmtal/imgui/ImGuiCaller.h"
 
 
-class ImGuiTestCaller: public SimObject {
-private:
-    typedef SimObject Parent;
-    U32 mCallerId = 0;
-
-    ImGuiCtrl* mGuiCtrl = nullptr;
-
+class ImGuiTestCaller: public ImGuiCaller {
+    typedef ImGuiCaller Parent;
 public:
     DECLARE_CONOBJECT(ImGuiTestCaller);
-
-    bool onAdd();
-    void onRemove();
-    bool Connect(ImGuiCtrl* ctrl);
     void onImGuiRender(Point2I offset, const RectI& updateRect);
 
 };
 IMPLEMENT_CONOBJECT(ImGuiTestCaller);
 
-bool ImGuiTestCaller::onAdd()
-{
-    if (!Parent::onAdd())
-        return false;
-    return true;
-}
-
-void ImGuiTestCaller::onRemove()
-{
-    if (mCallerId && mGuiCtrl) {
-        mGuiCtrl->removeDrawCaller(mCallerId);
-    }
-    Parent::onRemove();
-}
-
-bool ImGuiTestCaller::Connect(ImGuiCtrl* ctrl) {
-    if ( !ctrl ||  mCallerId > 0 ) return false;
-    mGuiCtrl = ctrl;
-    mCallerId = mGuiCtrl->addDrawCaller(
-        [this](Point2I offset, const RectI& updateRect) {
-            onImGuiRender(offset, updateRect);
-        }
-    );
-    return true;
-}
-
-DefineEngineMethod(ImGuiTestCaller, connect, bool, (ImGuiCtrl* ctrl),,"Connect to a ImGuiCtrl") {
-    return object->Connect(ctrl);
-}
-
 
 void ImGuiTestCaller::onImGuiRender(Point2I offset, const RectI& updateRect) {
     ImGui::PushID(this);
+    ImGui::Begin("Test Caller");
     ImGui::TextDisabled("Hello from TestCaller ....");
     static char nameBuf[64];
     ImGui::Text("Name");
@@ -68,6 +32,17 @@ void ImGuiTestCaller::onImGuiRender(Point2I offset, const RectI& updateRect) {
     ImGui::SetNextItemWidth(200);
     if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf))) {
     }
+    if (ImGui::Button("DELETE TEST !! DANGERZONE") ){
+        Sim::postEvent(this, new DeferredDeleteActionEvent(getImGuiCtrl()), Sim::getCurrentTime()+100);
+    }
+
+    if (ImGui::Button("Call ShowCase") ){
+        Con::evaluatef("$testCaller = new imGuiTest2(); $testCaller.connect(ImGuiHud);");
+    }
+
+
+    // $testCaller = new imGuiTest2(); $testCaller.connect(ImGuiHud);
+    ImGui::End();
     ImGui::PopID();
 
 
