@@ -19,7 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # -----------------------------------------------------------------------------
-
 project(${TORQUE_APP_NAME})
 
 set(CMAKE_CXX_STANDARD 20)
@@ -38,15 +37,9 @@ if(UNIX)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register>)
 
     # -------
-
     # set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
     # enable_language(ASM_NASM)
-    # set(CMAKE_CXX_STANDARD 11)
-    # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
-
-# target_compile_options(${TORQUE_APP_NAME} PRIVATE -Wundef)
-
 
 ###############################################################################
 # modules
@@ -566,28 +559,6 @@ if( TORQUE_OPENGL )
     endif()
 endif()
 
-###############################################################################
-# # FreeBSD fix:
-if(UNIX AND NOT APPLE)
-      find_package(PkgConfig REQUIRED)
-      pkg_check_modules(X11 REQUIRED x11)
-      pkg_check_modules(XFT REQUIRD Xft)
-      pkg_check_modules(XEXT REQUIRD Xext)
-      pkg_check_modules(XXF86VM REQUIRD Xxf86vm)
-      pkg_check_modules(FREETYPE REQUIRED freetype2)
-      include_directories(${X11_INCLUDE_DIRS})
-      include_directories(${FREETYPE_INCLUDE_DIRS})
-
-       link_directories(
-        ${X11_LIBRARY_DIRS}
-        ${XFT_LIBRARY_DIRS}
-	${XEXT_LIBRARY_DIRS}
-        ${XXF86VM_LIBRARY_DIRS}
-        ${FREETYPE_LIBRARY_DIRS}
-       )
-
-endif()
-
 
 ###############################################################################
 if(NOT OGE3D_DELAY_FINISH)
@@ -656,16 +627,6 @@ addLib(collada)
 addLib(pcre)
 addLib(convexDecomp)
 if (TORQUE_OPENGL)
-   # if(UNIX)
-   #      find_package(PkgConfig REQUIRED)
-   #      pkg_check_modules(X11 REQUIRED x11)
-   # endif()
-   #
-   # FIXME somewhere else ?!
-   # if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
-   #      include_directories(/usr/local/include)
-   #      # link_directories(/usr/local/lib)
-   #  endif()
    addLib(glad)
 endif()
 
@@ -701,34 +662,20 @@ endif()
 if(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(Threads REQUIRED)
+    # not working on bsd => Threads::Threads
 
-    # Ensure /usr/local/lib is in search path for FreeBSD/Linux
-    # link_directories(/usr/local/lib)
+    if( NOT X11_Xft_FOUND)
+        message(FATAL_ERROR "Xft not found!")
+    endif()
 
-    
-    # Use CMake-found libraries instead of hardcoded names
-    # Fallback to names if find_package returns incomplete paths
-    # set(TORQUE_EXTERNAL_LIBS 
-    #     ${X11_LIBRARIES} 
-    #     ${OPENGL_LIBRARIES} 
-    #     Xxf86vm 
-    #     Xext 
-    #     Xft 
-    #     dl 
-    #     stdc++ 
-    #     pthread
-    #  )
     set(TORQUE_EXTERNAL_LIBS 
         ${X11_LIBRARIES} 
         ${OPENGL_LIBRARIES} 
-        Xext 
-        Xft 
-        dl 
-        stdc++ 
+        ${X11_Xft_LIB}
         pthread
     )
     
-    # Ensure include directories for X11 are added if found
     if(X11_INCLUDE_DIR)
         include_directories(${X11_INCLUDE_DIR})
     endif()
