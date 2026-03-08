@@ -25,30 +25,6 @@ project(${TORQUE_APP_NAME})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# if(UNIX)
-#     if(NOT CXX_FLAG32)
-#         set(CXX_FLAG32 "")
-#     endif()
-#     #set(CXX_FLAG32 "-m32") #uncomment for build x32 on OSx64
-#
-#     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors -Wno-return-type-c-linkage -Wno-unused-local-typedef ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-#     else()
-#     # default compiler flags
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CXX_FLAG32} -Wundef -msse -pipe -Wfatal-errors ${TORQUE_ADDITIONAL_LINKER_FLAGS} -Wl,-rpath,'$$ORIGIN'")
-#
-#    endif()
-#
-# 	# for asm files
-# 	# SET (CMAKE_ASM_NASM_OBJECT_FORMAT "elf")
-# 	# ENABLE_LANGUAGE (ASM_NASM)
-#
-#     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
-# endif()
-
-
 if(UNIX)
     add_compile_options(-msse -pipe -Wfatal-errors)
 
@@ -171,7 +147,7 @@ else()
 endif()
 
 if(WIN32)
-	option(TORQUE_D3D11 "Allow Direct3D 11 render" ON)
+	option(TORQUE_D3D11 "Allow Direct3D 11 render" OFF)
 endif()
 
 option(TORQUE_DEDICATED "Torque dedicated" OFF)
@@ -393,10 +369,6 @@ addPathRec("${srcDir}/T3D/components/")
 addPathRec("${srcDir}/T3D/systems")
 
 addPath("${srcDir}/main/")
-# addPath("${srcDir}/assets")
-# addPath("${srcDir}/module")
-# addPathRec("${srcDir}/T3D/assets")
-# addPathRec("${srcDir}/persistence")
 addPathRec("${srcDir}/ts/collada")
 addPathRec("${srcDir}/ts/loader")
 addPathRec("${projectSrcDir}")
@@ -493,46 +465,6 @@ if(TORQUE_SDL)
 
     # FIXME only SDL ???
     addLib(libtinyfiledialogs)
-
-  #   if(UNIX AND NOT APPLE)
-  #      #set(CMAKE_SIZEOF_VOID_P 4) #force 32 bit
-  #      set(ENV{CFLAGS} "${CXX_FLAG32} -g -O3")
-  #      if("${TORQUE_ADDITIONAL_LINKER_FLAGS}" STREQUAL "")
-  #        set(ENV{LDFLAGS} "${CXX_FLAG32}")
-  #      else()
-  #        set(ENV{LDFLAGS} "${CXX_FLAG32} ${TORQUE_ADDITIONAL_LINKER_FLAGS}")
-  #      endif()
-  #
-  #      find_package(PkgConfig REQUIRED)
-  #      # pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-  #      #
-  #      # # Setup CMake to use GTK+, tell the compiler where to look for headers
-  #      # # and to the linker where to look for libraries
-  #      # include_directories(${GTK3_INCLUDE_DIRS})
-  #      # link_directories(${GTK3_LIBRARY_DIRS})
-  #      #
-  #      # # Add other flags to the compiler
-  #      # add_definitions(${GTK3_CFLAGS_OTHER})
-  #      #
-  #      # if(TORQUE_USE_ZENITY)
-  #      #    set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "nfd_gtk.c" )
-  #      # else()
-  #      #    set(BLACKLIST "nfd_win.cpp" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
-  #      # endif()
-  #      # addLib(nativeFileDialogs)
-  #      #
-  #      # set(BLACKLIST ""  )
-  #      # target_link_libraries(nativeFileDialogs ${GTK3_LIBRARIES})
-  # elseif(APPLE)
-  #     # set(BLACKLIST "nfd_gtk.c" "nfd_win.cpp" )
-  #     # addLib(nativeFileDialogs)
-  #     # set(BLACKLIST ""  )
- 	# else()
- 	#    # set(BLACKLIST "nfd_gtk.c" "nfd_cocoa.m" "simple_exec.h" "nfd_zenity.c")
- 	#    # addLib(nativeFileDialogs)
-  #    # set(BLACKLIST ""  )
- 	#    addLib(comctl32)
-  # endif()
 
     #override and hide SDL2 cache variables
     #set apple to sue sdl static lib, other platforms use dynamic
@@ -636,12 +568,25 @@ endif()
 
 ###############################################################################
 # # FreeBSD fix:
-# if(UNIX AND NOT APPLE)
-#      find_package(PkgConfig REQUIRED)
-#      pkg_check_modules(X11 REQUIRED x11)
-#      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${X11_LDFLAGS}")
-#       include_directories(${X11_INCLUDE_DIRS})
-# endif()
+if(UNIX AND NOT APPLE)
+      find_package(PkgConfig REQUIRED)
+      pkg_check_modules(X11 REQUIRED x11)
+      pkg_check_modules(XFT REQUIRD Xft)
+      pkg_check_modules(XEXT REQUIRD Xext)
+      pkg_check_modules(XXF86VM REQUIRD Xxf86vm)
+      pkg_check_modules(FREETYPE REQUIRED freetype2)
+      include_directories(${X11_INCLUDE_DIRS})
+      include_directories(${FREETYPE_INCLUDE_DIRS})
+
+       link_directories(
+        ${X11_LIBRARY_DIRS}
+        ${XFT_LIBRARY_DIRS}
+	${XEXT_LIBRARY_DIRS}
+        ${XXF86VM_LIBRARY_DIRS}
+        ${FREETYPE_LIBRARY_DIRS}
+       )
+
+endif()
 
 
 ###############################################################################
@@ -717,10 +662,10 @@ if (TORQUE_OPENGL)
    # endif()
    #
    # FIXME somewhere else ?!
-    if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
-        include_directories(/usr/local/include)
-        # link_directories(/usr/local/lib)
-    endif()
+   # if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+   #      include_directories(/usr/local/include)
+   #      # link_directories(/usr/local/lib)
+   #  endif()
    addLib(glad)
 endif()
 
@@ -758,14 +703,24 @@ if(UNIX AND NOT APPLE)
     find_package(OpenGL REQUIRED)
 
     # Ensure /usr/local/lib is in search path for FreeBSD/Linux
-    link_directories(/usr/local/lib)
+    # link_directories(/usr/local/lib)
+
     
     # Use CMake-found libraries instead of hardcoded names
     # Fallback to names if find_package returns incomplete paths
+    # set(TORQUE_EXTERNAL_LIBS 
+    #     ${X11_LIBRARIES} 
+    #     ${OPENGL_LIBRARIES} 
+    #     Xxf86vm 
+    #     Xext 
+    #     Xft 
+    #     dl 
+    #     stdc++ 
+    #     pthread
+    #  )
     set(TORQUE_EXTERNAL_LIBS 
         ${X11_LIBRARIES} 
         ${OPENGL_LIBRARIES} 
-        Xxf86vm 
         Xext 
         Xft 
         dl 
