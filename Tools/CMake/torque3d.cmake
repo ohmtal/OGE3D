@@ -656,8 +656,10 @@ if((${CMAKE_VERSION} VERSION_EQUAL 3.6.0) OR (${CMAKE_VERSION} VERSION_GREATER 3
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TORQUE_APP_NAME})
 endif()
 
-message(STATUS "writing ${projectSrcDir}/torqueConfig.h")
-CONFIGURE_FILE("${cmakeDir}/torqueConfig.h.in" "${projectSrcDir}/torqueConfig.h")
+if(NOT EXISTS "${projectSrcDir}/torqueConfig.h")
+    message(STATUS "writing ${projectSrcDir}/torqueConfig.h")
+    CONFIGURE_FILE("${cmakeDir}/torqueConfig.h.in" "${projectSrcDir}/torqueConfig.h")
+endif()
 
 # configure the relevant files only once
 

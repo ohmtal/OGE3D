@@ -2,7 +2,7 @@
 ## todos in random order 
 
 - [ ] replace X11_ShowMessageBox ... check all X11 stuff!! 
-- [ ] fix cmake overwrites torqueConfig.h in  Projects 
+- [X] fix cmake overwrites torqueConfig.h in  Projects 
 - [ ] updating to SDL3 
 - [ ] finish fxGrass 
 - [X] updating to C++20 , compiles ....
