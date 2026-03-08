@@ -635,13 +635,13 @@ if( TORQUE_OPENGL )
 endif()
 
 ###############################################################################
-# FreeBSD fix:
-if(UNIX AND NOT APPLE)
-     find_package(PkgConfig REQUIRED)
-     pkg_check_modules(X11 REQUIRED x11)
-     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${X11_LDFLAGS}")
-      include_directories(${X11_INCLUDE_DIRS})
-endif()
+# # FreeBSD fix:
+# if(UNIX AND NOT APPLE)
+#      find_package(PkgConfig REQUIRED)
+#      pkg_check_modules(X11 REQUIRED x11)
+#      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${X11_LDFLAGS}")
+#       include_directories(${X11_INCLUDE_DIRS})
+# endif()
 
 
 ###############################################################################
@@ -717,7 +717,7 @@ if (TORQUE_OPENGL)
    # FIXME somewhere else ?!
     if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
         include_directories(/usr/local/include)
-        link_directories(/usr/local/lib)
+        # link_directories(/usr/local/lib)
     endif()
    addLib(glad)
 endif()
