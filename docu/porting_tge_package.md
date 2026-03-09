@@ -4,8 +4,7 @@
 
 TGE 1.4.2 was the Version i got from Garage Games for $100 in 2006?  with an free upgrade to TGE 1.52. 
 
-Note: i have the Torque3D Interior (pro version) source compiled in - i does not work so good but should load the Interiors 
-This is not part of the OGE3D since it was not released as open source. 
+Note: i have the Torque3D Interior  source compiled in - i does not work so good but should load the Interiors.
 
 
 - ./OhmtalGame_Linux_Debug.bin -game starter.fps -notools 
