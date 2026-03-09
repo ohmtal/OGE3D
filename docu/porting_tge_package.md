@@ -25,7 +25,7 @@ This is not part of the OGE3D since it was not released as open source.
     
 - ./OhmtalGame_Linux_Debug.bin -game starter.fps -notools
     - Main menu :)
-    - Start mission finds the mission (🐞 names are not detected correctly)
+    - Start mission finds the mission (names are not detected correctly)
     - load Mission 
     - 🐞 /opt/OGE3D/Engine/source/gfx/gfxTextureHandle.cpp(62,0): {Fatal} - Texture name is empty
         - 😔 Platform::debugBreak: triggering SIGSEGV for core dump
@@ -35,7 +35,7 @@ This is not part of the OGE3D since it was not released as open source.
         - **penultimate mission is StrongHold!!!!**
         - Waterblock is somewhere => Waterplane but we dont have the textures here 
         - Kork is a bit too transparent ;)
-        -🐞 Something is missing can't access data or core folder
+        - 🐞 Something is missing can't access data or core folder
         
 
     
