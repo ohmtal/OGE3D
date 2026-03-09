@@ -174,7 +174,7 @@
 
  StringTableEntry osGetTemporaryDirectory()
  {
-    return StringTable->insert(sTempDir);
+    return StringTable->insert(sTempDir, true);
  }
 
  // Various handy utility functions:
@@ -478,10 +478,10 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
           Platform::FileInfo& rInfo = fileVector.last();
 
           if (relativePath)
-             rInfo.pFullPath = StringTable->insert(relativePath);
+             rInfo.pFullPath = StringTable->insert(relativePath, true);
           else
-             rInfo.pFullPath = StringTable->insert(path);
-          rInfo.pFileName = StringTable->insert(fEntry->d_name);
+             rInfo.pFullPath = StringTable->insert(path, true);
+          rInfo.pFileName = StringTable->insert(fEntry->d_name, true);
           rInfo.fileSize  = fStat.st_size;
           //dPrintf("Adding file: %s/%s\n", rInfo.pFullPath, rInfo.pFileName);
        }
@@ -1009,7 +1009,7 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
  {
     char cwd_buf[2048];
     getcwd(cwd_buf, 2047);
-    return StringTable->insert(cwd_buf);
+    return StringTable->insert(cwd_buf, true);
  }
 
  //-----------------------------------------------------------------------------
@@ -1029,14 +1029,14 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
  //-----------------------------------------------------------------------------
  const char *Platform::getUserDataDirectory()
  {
-    return StringTable->insert( GetPrefDir() );
+    return StringTable->insert( GetPrefDir() , true);
  }
 
  //-----------------------------------------------------------------------------
  StringTableEntry Platform::getUserHomeDirectory()
  {
     char *home = getenv( "HOME" );
-    return StringTable->insert( home );
+    return StringTable->insert( home , true);
  }
 
  StringTableEntry Platform::getExecutablePath()
@@ -1055,7 +1055,7 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
       }
    }
 
-   return StringTable->insert(sBinPathName);
+   return StringTable->insert(sBinPathName, true);
 }
 
  //-----------------------------------------------------------------------------
@@ -1273,6 +1273,7 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
 
    //////////////////////////////////////////////////////////////////////////
    // add path to our return list ( provided it is valid )
+   // XXTH 20260309 added casesense to StringTable->insert
    //////////////////////////////////////////////////////////////////////////
    if (!Platform::isExcludedDirectory(subPath))
    {
@@ -1280,7 +1281,7 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
       {
          // We have a path and it's not an empty string or an excluded directory
          if ( (subPath && (dStrncmp (subPath, "", 1) != 0)) )
-            directoryVector.push_back(StringTable->insert(subPath));
+            directoryVector.push_back(StringTable->insert(subPath, true));
       }
       else
       {
@@ -1303,24 +1304,24 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
                   dSprintf(szPath, 1024, "%s/%s", basePath, subPath);
             }
 
-            directoryVector.push_back(StringTable->insert(szPath));
+            directoryVector.push_back(StringTable->insert(szPath, true));
          }
          else
-            directoryVector.push_back(StringTable->insert(basePath));
+            directoryVector.push_back(StringTable->insert(basePath, true));
       }
    }
    //////////////////////////////////////////////////////////////////////////
    // Iterate through and grab valid directories
    //////////////////////////////////////////////////////////////////////////
 
-	while (d = readdir(dip))
+	while ((d = readdir(dip)))
 	{
 		bool	isDir;
 		isDir = false;
 		if (d->d_type == DT_UNKNOWN)
 		{
 			char child [1024];
-			if ((Path[dStrlen(Path) - 1] == '/'))
+			if (Path[dStrlen(Path) - 1] == '/')
 				dSprintf(child, 1024, "%s%s", Path, d->d_name);
 			else
 				dSprintf(child, 1024, "%s/%s", Path, d->d_name);
@@ -1376,7 +1377,7 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
 
 StringTableEntry Platform::getExecutableName()
 {
-   return StringTable->insert(sBinName);
+   return StringTable->insert(sBinName, true);
 }
 
 extern "C"

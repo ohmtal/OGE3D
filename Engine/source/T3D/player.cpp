@@ -2320,7 +2320,7 @@ void Player::setState(ActionState state, U32 recoverTicks)
                else
                {
                   // Legacy recover system
-                  mRecoverTicks = recoverTicks;
+                  mRecoverTicks = mClamp(recoverTicks, 0, 127);
                   mReversePending = U32(F32(mRecoverTicks) / sLandReverseScale);
                   setActionThread(PlayerData::LandAnim, true, false, true, true);
                }
@@ -2352,37 +2352,76 @@ void Player::updateState()
          }
          else
          {
-            // Legacy recover system
-            if (mRecoverTicks-- <= 0)
-            {
-               if (mReversePending && mActionAnimation.action != PlayerData::NullAnimation)
+               // Legacy recover system
+               if (mRecoverTicks > 0) mRecoverTicks--;
+               else mRecoverTicks = 0;
+
+               if (mRecoverTicks == 0)
                {
-                  // this serves and counter, and direction state
-                  mRecoverTicks = mReversePending;
-                  mActionAnimation.forward = false;
+                     if (mReversePending && mActionAnimation.action != PlayerData::NullAnimation)
+                     {
+                           // hier wird mRecoverTicks wieder ein positiver Wert zugewiesen
+                           mRecoverTicks = mReversePending;
+                           mActionAnimation.forward = false;
 
-                  S32 seq = mDataBlock->actionList[mActionAnimation.action].sequence;
-                  S32 imageBasedSeq = convertActionToImagePrefix(mActionAnimation.action);
-                  if (imageBasedSeq != -1)
-                     seq = imageBasedSeq;
+                           S32 seq = mDataBlock->actionList[mActionAnimation.action].sequence;
+                           S32 imageBasedSeq = convertActionToImagePrefix(mActionAnimation.action);
+                           if (imageBasedSeq != -1)
+                                 seq = imageBasedSeq;
 
-                  F32 pos = mShapeInstance->getPos(mActionAnimation.thread);
+                           F32 pos = mShapeInstance->getPos(mActionAnimation.thread);
 
-                  mShapeInstance->setTimeScale(mActionAnimation.thread, -sLandReverseScale);
-                  mShapeInstance->transitionToSequence(mActionAnimation.thread,
-                                                       seq, pos, sAnimationTransitionTime, true);
-                  mReversePending = 0;
+                           mShapeInstance->setTimeScale(mActionAnimation.thread, -sLandReverseScale);
+                           mShapeInstance->transitionToSequence(mActionAnimation.thread,
+                                                                seq, pos, sAnimationTransitionTime, true);
+                           mReversePending = 0;
+                     }
+                     else
+                     {
+                           setState(MoveState);
+                     }
                }
-               else
+               else if (!mReversePending && mVelocity.lenSquared() > sSlowStandThreshSquared)
                {
-                  setState(MoveState);
+                     mActionAnimation.waitForEnd = false;
+                     setState(MoveState);
+                     mRecoverTicks = 0;
                }
-            }        // Stand back up slowly only if not moving much-
-            else if (!mReversePending && mVelocity.lenSquared() > sSlowStandThreshSquared)
-            {
-               mActionAnimation.waitForEnd = false;
-               setState(MoveState);
-            }
+
+         //    // Legacy recover system
+         //    if (mRecoverTicks-- <= 0)
+         //    {
+         //       if (mReversePending && mActionAnimation.action != PlayerData::NullAnimation)
+         //       {
+         //          // this serves and counter, and direction state
+         //          mRecoverTicks = mReversePending;
+         //          mActionAnimation.forward = false;
+         //
+         //          S32 seq = mDataBlock->actionList[mActionAnimation.action].sequence;
+         //          S32 imageBasedSeq = convertActionToImagePrefix(mActionAnimation.action);
+         //          if (imageBasedSeq != -1)
+         //             seq = imageBasedSeq;
+         //
+         //          F32 pos = mShapeInstance->getPos(mActionAnimation.thread);
+         //
+         //          mShapeInstance->setTimeScale(mActionAnimation.thread, -sLandReverseScale);
+         //          mShapeInstance->transitionToSequence(mActionAnimation.thread,
+         //                                               seq, pos, sAnimationTransitionTime, true);
+         //          mReversePending = 0;
+         //       }
+         //       else
+         //       {
+         //          setState(MoveState);
+         //       }
+         //    }        // Stand back up slowly only if not moving much-
+         //    else if (!mReversePending && mVelocity.lenSquared() > sSlowStandThreshSquared)
+         //    {
+         //       mActionAnimation.waitForEnd = false;
+         //       setState(MoveState);
+         //       mRecoverTicks = 0;
+         //    }
+
+
          }
          break;
       
@@ -3996,7 +4035,7 @@ void Player::updateActionThread()
          //XXTH ...test it with Terrain 
          if( gClientContainer.castRay( Point3F( pos.x, pos.y, pos.z + 0.01f ),
                Point3F( pos.x, pos.y, pos.z - 2.0f ),
-               STATIC_COLLISION_TYPEMASK | VehicleObjectType | TerrainObjectType, &rInfo ) )
+               (U32)STATIC_COLLISION_TYPEMASK | VehicleObjectType | TerrainObjectType, &rInfo ) )
          {
             Material* material = ( rInfo.material ? dynamic_cast< Material* >( rInfo.material->getMaterial() ) : 0 );
 
@@ -5640,7 +5679,7 @@ void Player::setTransform(const MatrixF& mat)
    mat.getColumn(3,&pos);
    Point3F rot(0.0f, 0.0f, -mAtan2(-vec.x,vec.y));
    setPosition(pos,rot);
-   setMaskBits(MoveMask | NoWarpMask);
+   setMaskBits((U32)MoveMask | NoWarpMask);
 }
 
 void Player::getEyeTransform(MatrixF* mat)
@@ -7183,7 +7222,7 @@ void Player:: playImpactSound()
 
       if( gClientContainer.castRay( Point3F( pos.x, pos.y, pos.z + 0.01f ),
                                     Point3F( pos.x, pos.y, pos.z - 2.0f ),
-                                    STATIC_COLLISION_TYPEMASK | VehicleObjectType,
+                                    (U32)STATIC_COLLISION_TYPEMASK | VehicleObjectType,
                                     &rInfo ) )
       {
          Material* material = ( rInfo.material ? dynamic_cast< Material* >( rInfo.material->getMaterial() ) : 0 );

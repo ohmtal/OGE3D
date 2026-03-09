@@ -1,11 +1,10 @@
 
 ## todos in random order 
 
-- [ ] replace X11_ShowMessageBox ... check all X11 stuff!! 
+
 - [X] fix cmake overwrites torqueConfig.h in  Projects 
-- [ ] updating to SDL3 
+- [ ] updating to SDL3 Streamline platform code 
 - [ ] finish fxGrass 
-- [ ] maybe: class Sky with dml loader. dml loader will be the problem i guess must be rotated ? and translated to materials 
 - [X] updating to C++20 , compiles ....
 - [X] Libs:
     - [X] update collada
@@ -20,7 +19,7 @@
         - [ ] search, replace, save, reload (hot!)
     
 - [ ] Streamline code: 
-    - [ ] do i really need oculus, hydra, physx and openvr ? << modules in cmake 
+    - [ ] do i really need oculus, hydra, physx and openvr ? << modules in cmake, and c++ code 
     - [X] I used a pre 4.0 version of 3.10 development version when i pulled it years ago and there a still fragments like the assets handling which can be removed. 
         - [X] removed modules
         - [X] removed assets 
