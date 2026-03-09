@@ -31,3 +31,7 @@
 - [ ] evaluate emscripten support for small projects 
 - [ ] evaluate android support 
 
+- [ ] Win
+    - [ ] test if it still work 
+    - [ ] write docu about vcpkg SDL2(3) and OpenAL
+
