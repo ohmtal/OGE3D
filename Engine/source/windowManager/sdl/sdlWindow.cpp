@@ -33,9 +33,9 @@
 
 #include "gfx/gfxDevice.h"
 
-#ifdef TORQUE_OS_LINUX
-#define SDL_VIDEO_DRIVER_X11  // TODO SDL
-#endif
+// #ifdef TORQUE_OS_LINUX
+// #define SDL_VIDEO_DRIVER_X11  // TODO SDL
+// #endif
 
 #include "SDL.h"
 #include "SDL_syswm.h"
