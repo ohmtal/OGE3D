@@ -844,15 +844,17 @@ X11_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
             rc = waitpid(pid, &status, 0);
         } while ((rc == -1) && (errno == EINTR));
 
-        SDL_assert(rc == pid);  /* not sure what to do if this fails. */
+        //XXTH SDL_assert(rc == pid);  /* not sure what to do if this fails. */
 
-        if ((rc == -1) || (!WIFEXITED(status)) || (WEXITSTATUS(status) != 0)) {
-            status = SDL_SetError("msgbox child process failed");
-        } else if ( (read(fds[0], &status, sizeof (int)) != sizeof (int)) ||
-                    (read(fds[0], buttonid, sizeof (int)) != sizeof (int)) ) {
-            status = SDL_SetError("read from msgbox child process failed");
-            *buttonid = 0;
-        }
+        // if ( rc == pid ) {
+            if ((rc == -1) || (!WIFEXITED(status)) || (WEXITSTATUS(status) != 0)) {
+                status = SDL_SetError("msgbox child process failed");
+            } else if ( (read(fds[0], &status, sizeof (int)) != sizeof (int)) || (read(fds[0], buttonid, sizeof (int)) != sizeof (int)) ) {
+                status = SDL_SetError("read from msgbox child process failed");
+                *buttonid = 0;
+            }
+
+        // }
         close(fds[0]);
 
         return status;

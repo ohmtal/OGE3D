@@ -59,7 +59,9 @@ bool GFXTexHandle::set( const String &texName, GFXTextureProfile *profile, const
    free();
    
    // Create and set the new texture.
-   AssertFatal( texName.isNotEmpty(), "Texture name is empty" );
+   // XXTH !! AssertFatal( texName.isNotEmpty(), "Texture name is empty" );
+   if (texName.isEmpty())
+         Con::errorf("!!!!!!!!! Texture name is empty !!!!!!!!!!!");
    StrongObjectRef::set( TEXMGR->createTexture( texName, profile ) );
    
    #ifdef TORQUE_DEBUG

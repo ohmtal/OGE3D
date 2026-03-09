@@ -5,6 +5,7 @@
 - [X] fix cmake overwrites torqueConfig.h in  Projects 
 - [ ] updating to SDL3 
 - [ ] finish fxGrass 
+- [ ] maybe: class Sky with dml loader. dml loader will be the problem i guess must be rotated ? and translated to materials 
 - [X] updating to C++20 , compiles ....
 - [X] Libs:
     - [X] update collada
