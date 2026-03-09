@@ -8,7 +8,7 @@ Note: i have the Torque3D Interior  source compiled in - i does not work so good
 
 
 - ./OhmtalGame_Linux_Debug.bin -game starter.fps -notools 
-    -  console not picture
+    -  console only
 - let's do the fixes I did for sheep dog
     - 🔨 main.cs
         - loadDir("common"); => loadDir("core");
@@ -34,7 +34,7 @@ Note: i have the Torque3D Interior  source compiled in - i does not work so good
         - **penultimate mission is StrongHold!!!!**
         - Waterblock is somewhere => Waterplane but we dont have the textures here 
         - Kork is a bit too transparent ;)
-        - 🐞 Something is missing can't access data or core folder
+        - fixed: ~~🐞 Something is missing can't access data or core folder~~
         
 
     
