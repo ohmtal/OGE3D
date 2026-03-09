@@ -434,7 +434,7 @@ void GroundPlane::createGeometry( const Frustum& frustum )
    U32 width = mCeil( ( max.x - min.x ) / mSquareSize );
    if( width > MAX_WIDTH )
    {
-      mSquareSize = mCeil( ( max.x - min.x ) / MAX_WIDTH );
+      mSquareSize = mCeil( ( max.x - min.x ) / (U32)MAX_WIDTH );
       width = MAX_WIDTH;
    }
    else if( !width )
@@ -443,7 +443,7 @@ void GroundPlane::createGeometry( const Frustum& frustum )
    U32 height = mCeil( ( max.y - min.y ) / mSquareSize );
    if( height > MAX_HEIGHT )
    {
-      mSquareSize = mCeil( ( max.y - min.y ) / MAX_HEIGHT );
+      mSquareSize = mCeil( ( max.y - min.y ) / (U32)MAX_HEIGHT );
       height = MAX_HEIGHT;
    }
    else if( !height )

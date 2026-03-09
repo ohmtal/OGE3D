@@ -825,7 +825,7 @@ void afxEffectWrapper::prestart()
   if ((mEW_timing.fade_in_time + mEW_timing.fade_out_time) > 0.0f)
   {
     mFade_in_end = mEW_timing.delay + mEW_timing.fade_in_time;
-    if (mFull_lifetime == INFINITE_LIFETIME)
+    if ((U32)mFull_lifetime == (U32)INFINITE_LIFETIME)
       mFade_out_start = INFINITE_LIFETIME;
     else
       mFade_out_start = mEW_timing.delay + mEW_timing.lifetime;
@@ -1086,7 +1086,7 @@ void afxEffectWrapper::stop()
   mStopped = true; 
 
   // this resets full_lifetime so it starts to shrink or fade
-  if (mFull_lifetime == INFINITE_LIFETIME)
+  if ((U32)mFull_lifetime == (U32)INFINITE_LIFETIME)
   {
     mFull_lifetime = (mElapsed - mEW_timing.delay) + afterStopTime();
 	mLife_end = mElapsed;

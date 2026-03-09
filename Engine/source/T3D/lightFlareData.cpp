@@ -40,7 +40,7 @@
 #include "collision/collision.h"
 #include "lighting/lightManager.h"
 
-const U32 LightFlareData::LosMask = STATIC_COLLISION_TYPEMASK |
+const U32 LightFlareData::LosMask = (U32)STATIC_COLLISION_TYPEMASK |
                                     ShapeBaseObjectType |
                                     StaticShapeObjectType |
                                     ItemObjectType;
