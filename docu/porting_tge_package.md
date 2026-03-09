@@ -19,6 +19,8 @@ Note: i have the Torque3D Interior  source compiled in - i does not work so good
         - initCanvas(...); => configureCanvas()
         - before setNetPort(0) add: loadMaterials();
     - 🔨 client/defaults.cs at top: exec( "core/scripts/client/defaults.cs" );
+        - optional the rest of the file and add: **execOverwriteSettings();** this enable command line paramteres for graphic profiles => it does not something else is missing. 
+        
     - 🔨 server/init.cs: $Server::MissionFileSpec = "*/missions/*.mis"; => $Server::MissionFileSpec = $defaultGame @ "/data/missions/*.mis";
     - 🤘 in folder starter.fps:  find . -type f -exec sed -i 's/datablock TSShapeConstructor/singleton TSShapeConstructor/g' {} +
     
@@ -33,7 +35,7 @@ Note: i have the Torque3D Interior  source compiled in - i does not work so good
     - ./OhmtalGame_Linux.bin -game starter.fps -notools
         - **penultimate mission is StrongHold!!!!**
         - Waterblock is somewhere => Waterplane but we dont have the textures here 
-        - Kork is a bit too transparent ;)
+        - fixed with loadMaterials  ~~Kork is a bit too transparent ;)~~
         - fixed: ~~🐞 Something is missing can't access data or core folder~~
         
 
