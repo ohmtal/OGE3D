@@ -62,7 +62,7 @@ void GuiDirectoryTreeCtrl::updateTree()
    // much as windows does.
 
 
-   StringTableEntry RootPath = Con::getVariable("$defaultGame");
+   StringTableEntry RootPath = Platform::getMainDotCsDir(); // nice but i also need core Con::getVariable("$defaultGame");
 
 
    S32 modCount = getUnitCount(RootPath, ";");

@@ -317,6 +317,11 @@ class StringBuilder
    public:
 
       StringBuilder() {}
+
+      String toString() {
+            return mFormat.getString();
+      }
+
       
       U32 length() const
       {
