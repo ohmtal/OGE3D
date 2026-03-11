@@ -13,20 +13,20 @@
 - [ ] imgui testing 
     - [X] add to lib (cmake)
     - [X] "glue" ImGuiCtrl Object added 
-    - [ ] Nice to have: Torque Script editor in game :D 
+    - [ ] Nice to have: embeded Torque Script editor  
         - [ ] parse for files => file browser 
         - [ ] syntax highlight 
         - [ ] search, replace, save, reload (hot!)
     
 - [ ] Streamline code: 
-    - [ ] do i really need oculus, hydra, physx and openvr ? << modules in cmake, and c++ code 
+    - [X] do i really need oculus, hydra and openvr ? << modules in cmake, and c++ code 
     - [X] I used a pre 4.0 version of 3.10 development version when i pulled it years ago and there a still fragments like the assets handling which can be removed. 
         - [X] removed modules
         - [X] removed assets 
         - [X] removed components 
         - [X] removed taml
-    - [ ] remove DirectX so I can concentrate on OpenGL and maybe later add Vulcan. 
-    - [ ] adding gltf (https://github.com/KhronosGroup/glTF-Sample-Models/tree/main)
+    - [ ] ~~remove DirectX so I can concentrate on OpenGL and maybe later add Vulcan.~~
+    - [ ] adding gltf/glb (https://github.com/KhronosGroup/glTF-Sample-Models/tree/main)
 - [ ] the new Torque3D Torque Script code would be cool but last time (2023) i tried to port it i cancled. 
 - [ ] evaluate emscripten support for small projects 
 - [ ] evaluate android support 
