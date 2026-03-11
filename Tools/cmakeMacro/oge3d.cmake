@@ -13,7 +13,7 @@ macro(configure_project_target TARGET_NAME PROJECT_DIR ASSETS_DIR)
     set(TORQUE_APP_NAME ${TARGET_NAME})
     set(TORQUE_APP_DIR ${PROJECT_DIR})
     
-    # We want generated files to go into the build directory ("Zielordner")
+    # We want generated files to go into the build directory
     set(projectOutDir "${CMAKE_CURRENT_BINARY_DIR}")
     set(projectSrcDir "${CMAKE_CURRENT_BINARY_DIR}")
 
