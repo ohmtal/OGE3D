@@ -214,8 +214,9 @@ const String& TSShape::getTargetName( S32 mapToNameIndex ) const
 
 S32 TSShape::getTargetCount() const
 {
-	if(!this)
-		return -1;
+      // this ?!
+	// if(!this)
+	// 	return -1;
 
 	return materialList->getMaterialNameList().size();
 

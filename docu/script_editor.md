@@ -2,16 +2,18 @@
 Using imGui. 
 
 
-- [ ] Scan all script files in background using a thread (config array: .cs,.hfl,.mis)
-- [ ] Multiple edit windows using docking 
-- [ ] File Broweser window 
-    - [ ] load
+- [X] Scan all script files ~~in background using a thread~~ (config array: *.cs,*.hfl,*.mis,*.gui,*.glsl,*.hlsl)
+- [X] Multiple edit windows using docking 
+- [ ] File ~~Browser window~~ Tree
+    - [X] load
     - [ ] delete 
+    - [ ] favorites (saved as console variable tab separated? )
+- [ ] dirty => do you want to save....
 - [ ] Actions
     - [ ] File:
         - new
         - *load => click on file browser :P 
-        - save
+        - [ ] save => ctrl+s done calling:  bool ScriptEditor::saveEditor(EditorState& editorState, String fullPath) 
         - save as 
     - [ ] Edit
         - copy 

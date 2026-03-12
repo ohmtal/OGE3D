@@ -676,6 +676,18 @@ void PlatformWindowSDL::_updateMonitorFromMove(const SDL_Event& evt)
 
 void PlatformWindowSDL::_processSDLEvent(SDL_Event &evt)
 {
+  //XXTH Event listener !!
+  if (evt.type !=  SDL_WINDOWEVENT ) {
+        bool consumed = false;
+        for (auto& listener : mOwningManager->smEventListeners) {
+              if (listener.callback(&evt)) {
+                    consumed = true;
+                    break;
+              }
+        }
+        if (consumed ) return;
+  }
+
    switch(evt.type)
    {        
       case SDL_KEYDOWN:

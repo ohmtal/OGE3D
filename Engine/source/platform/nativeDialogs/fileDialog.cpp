@@ -188,14 +188,6 @@ static const U32 convertUTF16toUTF8DoubleNULL(const UTF16 *unistring, UTF8  *out
 //
 bool FileDialog::Execute()
 {
-// #ifndef WIN32
-//    Con::warnf("-----------------------------------------------------------------------------");
-//    Con::warnf("FileDialog sucks dont use this ...... was not able to fix it! ");
-//    Con::warnf("THIS BREAKS COMPLETLY MY GAME ON LINUX (ubuntu/kubunti...) TRY NOOOOOT to use it!");
-//    Con::warnf("after this every console float becomes crazy  1.1 will be 1,1 and nothing works as it should!");
-//    Con::warnf("-----------------------------------------------------------------------------");
-// #endif // !WIN32
-
    String strippedFilters;
 
    U32 filtersCount = StringUnit::getUnitCount(mData.mFilters, "|");

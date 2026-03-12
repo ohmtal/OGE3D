@@ -314,16 +314,15 @@ void PlatformWindowManagerSDL::_process()
    while( SDL_PollEvent(&evt) )
    {      
 
-       // FIXME how to fix focus ?
        // XXTH event listener >>>
-       bool consumed = false;
-       for (auto& listener : smEventListeners) {
-           if (listener.callback(&evt)) {
-               consumed = true;
-               break;
-           }
-       }
-       if (consumed) continue;
+       // bool consumed = false;
+       // for (auto& listener : smEventListeners) {
+       //     if (listener.callback(&evt)) {
+       //         consumed = true;
+       //         break;
+       //     }
+       // }
+       // if (consumed) continue;
        //<<<
 
 

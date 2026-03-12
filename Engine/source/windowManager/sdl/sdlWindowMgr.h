@@ -170,6 +170,7 @@ public:
    /// @param state The state of the keyboard input, either being raw input or text
    ///  based input.
    void updateSDLTextInputState(KeyboardInputState state);
+   KeyboardInputState getSDLTextInputState() const {return mInputState; }
 };
 
 #endif

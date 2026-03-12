@@ -5,6 +5,7 @@
 // NOTE: this is experimental! using SDL2 and OpenGL
 //-----------------------------------------------------------------------------
 // WARNING: imgui_impl_opengl3.cpp modification:
+// ~~~ 1. upside down ~~~~~
 // in ImGui_ImplOpenGL3_SetupRenderState
 // //XXTH OGE3D Hack for fix upside down mirrored rendering
 // float L = draw_data->DisplayPos.x;
@@ -19,12 +20,25 @@
 //  *    float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
 //  */
 
+// ~~~ 2. position of objects ~~~
 // AND in ImGui_ImplOpenGL3_RenderDrawData:
 // // Apply scissor/clipping rectangle (Y is inverted in OpenGL)
 // //XXTH OGE3D Hack
 // GL_CALL(glScissor((int)clip_min.x, (int)clip_min.y, (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y)));
 // //ORIG:
 // //GL_CALL(glScissor((int)clip_min.x, (int)((float)fb_height - clip_max.y), (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y)));
+
+// ~~~ 3. color correction  ~~~
+// const GLchar* fragment_shader_glsl_130 =
+// "uniform sampler2D Texture;\n"
+// "in vec2 Frag_UV;\n"
+// "in vec4 Frag_Color;\n"
+// "out vec4 Out_Color;\n"
+// "void main()\n"
+// "{\n"
+// "    vec4 col = Frag_Color * texture(Texture, Frag_UV.st);\n"
+// "    Out_Color = vec4(pow(col.rgb, vec3(2.2)), col.a);\n"
+// "}\n";
 
 
 //-----------------------------------------------------------------------------
@@ -43,7 +57,7 @@ IMPLEMENT_CONOBJECT(ImGuiCtrl);
 bool ImGuiCtrl::smGlobalImGuiInitialized = false;
 //-----------------------------------------------------------------------------
 bool ImGuiCtrl::Initialize(){
-    if (smGlobalImGuiInitialized) {
+    if (smGlobalImGuiInitialized && mGuiIO) {
         return true;
     };
 
@@ -52,11 +66,24 @@ bool ImGuiCtrl::Initialize(){
     if (!winMgr || !winMgr->getFirstWindow())
         return false;
 
+    mWinManager =  dynamic_cast<PlatformWindowManagerSDL*>(winMgr);
+    if (!mWinManager)
+    {
+        Con::errorf("ImGuiCtrl: Only SDL Platform is supported.");
+        return false;
+    }
+
+    if ( smGlobalImGuiInitialized ) {
+        mGuiIO = &ImGui::GetIO();
+        return true;
+    }
+
+
     // SDL Window
     auto* window = dynamic_cast<PlatformWindowSDL*>(winMgr->getFirstWindow());
     if (!window)
     {
-        Con::errorf("ImGuiCtrl: Only SDL2 Platform is supported.");
+        Con::errorf("ImGuiCtrl: Only SDL Platform is supported.");
         return false;
     }
 
@@ -71,7 +98,7 @@ bool ImGuiCtrl::Initialize(){
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsDark();
     mGuiIO = &ImGui::GetIO();
 
     mGuiIO->IniFilename = mIniFileName;
@@ -103,37 +130,32 @@ bool ImGuiCtrl::Initialize(){
     mListenerId = PlatformWindowManagerSDL::addEventListener([this](const void* ev){
         // Pass to ImGui backend
         ImGui_ImplSDL2_ProcessEvent((const SDL_Event*)ev);
-        ImGuiIO& io = ImGui::GetIO();
-        return (io.WantCaptureMouse || io.WantCaptureKeyboard);
+
+        return (mGuiIO->WantCaptureMouse || mGuiIO->WantCaptureKeyboard);
     });
 
 
-    //FIXME Settings ?!
-    // // load settings...if we dont use inifile
-    // if (mIniFileName == nullptr && SettingsManager().IsInitialized()) {
-    //     std::string savedLayout = SettingsManager().get("imgui_layout", std::string(""));
-    //     if (!savedLayout.empty()) {
-    //         ImGui::LoadIniSettingsFromMemory(savedLayout.c_str(), savedLayout.size());
-    //     }
-    // }
+    if (mIniFileName == nullptr) {
+        String savedLayout =  Con::getVariable("$pref::imgui_layout");
+        if (!savedLayout.isEmpty()) {
+            ImGui::LoadIniSettingsFromMemory(savedLayout.c_str(), savedLayout.size());
+        }
+    }
+
 
 
     smGlobalImGuiInitialized = true;
 
     return true;
 }
+
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::Deinitialize() {
 
     if (!smGlobalImGuiInitialized) {
         return;
     };
-    // FIXME SAVE SETTINGS
-    //     size_t out_size;
-    //     const char* data = ImGui::SaveIniSettingsToMemory(&out_size);
-    //     SettingsManager().set("imgui_layout", std::string(data, out_size));
-    //     SettingsManager().save();
-    // }
+
 
     for (auto& drawCaller : smDrawCallers) {
         if (drawCaller.onRemove) {
@@ -174,9 +196,9 @@ bool ImGuiCtrl::onWake()
 
 
     // Global Context Initialization
-    if (!smGlobalImGuiInitialized)
-    {
-        Initialize();
+    if (!smGlobalImGuiInitialized || !mGuiIO) {
+       if (! Initialize() )
+           return false;
     }
 
     mAwake = true;
@@ -185,17 +207,29 @@ bool ImGuiCtrl::onWake()
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::onSleep()
 {
-    //bad idea :P PlatformWindowManagerSDL::removeEventListener(mListenerId);
+    if (mIniFileName == nullptr) {
+        Con::setVariable("$pref::imgui_layout", ImGui::SaveIniSettingsToMemory());
+    }
+
     mAwake = false;
     Parent::onSleep();
 }
 //-----------------------------------------------------------------------------
 void ImGuiCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-    if (!mAwake)
+    if (!mAwake || !mGuiIO)
         return;
 
 
+    if (mGuiIO->WantTextInput) {
+        if (!SDL_IsTextInputActive()) {
+            SDL_StartTextInput();
+        }
+    } else {
+        if (SDL_IsTextInputActive() && mWinManager->getSDLTextInputState() == PlatformWindowManagerSDL::KeyboardInputState::TEXT_INPUT ) {
+            SDL_StopTextInput();
+        }
+    }
 
     // Start ImGui Frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -228,10 +262,10 @@ void ImGuiCtrl::onRender(Point2I offset, const RectI &updateRect)
 //-----------------------------------------------------------------------------
 bool ImGuiCtrl::onInputEvent(const InputEventInfo &event)
 {
-    ImGuiIO& io = ImGui::GetIO();
+    if (!mGuiIO) return Parent::onInputEvent(event);
 
     // Redirect input based on ImGui's needs
-    if (io.WantCaptureMouse || io.WantCaptureKeyboard)
+    if (mGuiIO->WantCaptureMouse || mGuiIO->WantCaptureKeyboard)
     {
 //FIXME
         // You need a bridge function to translate Torque GuiEvent to ImGui/SDL Event

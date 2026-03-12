@@ -56,14 +56,16 @@ public:
 protected:
     bool mAwake;
     static bool smGlobalImGuiInitialized;
+    // bool mInitialized;
     U32 mListenerId;
 
-    ImGuiIO* mGuiIO = nullptr;
     ImGuiStyle mBaseStyle;
     bool mEnableDockSpace = true;
     ImGuiID mDockSpaceId;
     const char* mIniFileName = nullptr;
 
+    ImGuiIO* mGuiIO = nullptr;
+    PlatformWindowManagerSDL* mWinManager = nullptr;
 
 public:
     ImGuiCtrl();
