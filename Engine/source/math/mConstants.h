@@ -24,6 +24,7 @@
 #define _MCONSTANTS_H_
 
 #undef M_PI
+#undef M_2PI
 #undef M_SQRT2
 
 #define M_PI         3.14159265358979323846

@@ -488,7 +488,12 @@ if(TORQUE_SDL)
     #
     # include_directories("${libDir}/sdl/include")
     if (UNIX)
+
+
     addLib(imgui)
+    # addLib(imflux) << header only !
+    addInclude("${cmakeDir}/libraries/imflux")
+    target_compile_options(imgui PUBLIC -DIMGUI_DEFINE_MATH_OPERATORS)
     target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
     endif()
 
