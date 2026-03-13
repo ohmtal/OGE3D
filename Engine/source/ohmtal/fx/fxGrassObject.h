@@ -41,48 +41,51 @@
 class fxGrassObject : public SceneObject
 {
 private:
-	typedef SceneObject		Parent;
+   typedef SceneObject      Parent;
 
 protected:
+   enum {   fxGrassObjectMask      = (1 << 0),
+         fxGrassObjectAnother   = (1 << 1) };
 
+   // --- Modern Rendering ---
+   String mMaterialName;
+   Material *mMaterial;
+   BaseMatInstance *mMatInst;
 
-	enum {	fxGrassObjectMask		= (1 << 0),
-			fxGrassObjectAnother	= (1 << 1) };
+   // Shader parameter handles
+   MaterialParameterHandle *mSwayParam;
+   MaterialParameterHandle *mTimeParam;
+   MaterialParameterHandle *mLodParam;
 
-   GFXTexHandle					mTextureHandle;
+   GFXVertexBufferHandle<GFXVertexPNT> mVertexBuffer;
+   GFXPrimitiveBufferHandle mPrimitiveBuffer;
 
-	// Fields.
-	F32 mMinWidth;
-	F32 mMaxWidth;
-	F32 mMinHeight;
-	F32 mMaxHeight;
+   // Fields.
+   F32 mMinWidth;
+   F32 mMaxWidth;
+   F32 mMinHeight;
+   F32 mMaxHeight;
 
-	F32 mOffsetZ;
-	bool mRandomFlip;
-	F32	mSwayMulti;
+   F32 mOffsetZ;
+   bool mRandomFlip;
+   F32   mSwayMulti;
 
    bool mFlat;
    bool mFlatGround;
    S32  mSeed;
 
+   StringTableEntry mTextureName;
 
-    StringTableEntry				mTextureName;
-
-	// VBO
-    // GFXVertexBufferHandle<GFXVertexPCT>		mVBO;
-    
-    Vector< GFXVertexBufferHandle<GFXVertexPNT>* > mVBO;
-
-	S32 mCount;
-	F32 mLodDistance; 
-	bool mIsSquare;
-	F32 mInnerRadX;
-	F32 mOuterRadX;
-	F32 mInnerRadY;
-	F32 mOuterRadY;
+   S32 mCount;
+   F32 mLodDistance; 
+   bool mIsSquare;
+   F32 mInnerRadX;
+   F32 mOuterRadX;
+   F32 mInnerRadY;
+   F32 mOuterRadY;
    bool mOnlyInBoxZ;
 
-	S32			   mMaterialGrassIndex;
+   S32         mMaterialGrassIndex;
 
    bool            mAllowOnTerrain;
    bool            mAllowOnInteriors;
@@ -91,55 +94,45 @@ protected:
    bool            mAllowOnlyUnderWater;
    bool            mAllowWaterSurface;
 
+   F32 mDistance;
+   F32 mObjBoxZ;
+   void updateWorldBox();
 
-	F32 mDistance;
-	F32 mObjBoxZ;
-	void updateWorldBox();
+   MRandomLCG              RandomGen;
+   F32                  mLastCheckSum;
 
+   TerrainBlock* mTerrain;
 
-	MRandomLCG              RandomGen;
-	F32						mLastCheckSum;
+   F32 mRatio;
 
-	TerrainBlock* mTerrain;  //XXTH
-//	MaterialPropertyMap* mMatMap; //XXTH
-
-
-	F32 mRatio;
-	
-
-   //2.30 replaced with gEditingMission ! bool	mClientReplicationStarted;
+   void _initMaterial();
 
 public:
-	fxGrassObject();
-	~fxGrassObject();
+   fxGrassObject();
+   ~fxGrassObject();
 
-	bool initVBO();
+   bool initBuffers();
 
-	// SceneObject
-
-
+   // SceneObject
    virtual void prepRenderImage(SceneRenderState* state);
-   void renderObject(SceneRenderState* state);
+   void renderObject(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
 
+   // SimObject      
+   bool onAdd();
+   void onRemove();
+   void onEditorEnable();
+   void onEditorDisable();
+   void inspectPostApply();
 
-	// SimObject      
-	bool onAdd();
-	void onRemove();
-	void onEditorEnable();
-	void onEditorDisable();
-	void inspectPostApply();
+   // NetObject
+   U32 packUpdate(NetConnection *, U32, BitStream *);
+   void unpackUpdate(NetConnection *, BitStream *);
 
-	// NetObject
-	U32 packUpdate(NetConnection *, U32, BitStream *);
-	void unpackUpdate(NetConnection *, BitStream *);
+   // ConObject.
+   static void initPersistFields();
 
-	// ConObject.
-	static void initPersistFields();
-
-	// Declare Console Object.
-	DECLARE_CONOBJECT(fxGrassObject);
-
-	
+   // Declare Console Object.
+   DECLARE_CONOBJECT(fxGrassObject);
 };
 
 
