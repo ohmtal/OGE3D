@@ -15,7 +15,10 @@ make -j$(nproc)
 cd game
 ./Demo_Linux_Debug.bin
 ```
-note: if you are not using bash: replace -j$(nproc) with -j[number of processors] -j8 for example.
+###Notes:
+- if you are not using bash: replace -j$(nproc) with -j[number of processors] -j8 for example.
+- for dedicated build add **-DTORQUE_DEDICATED=ON** => cmake -S . -B Projects/Demo -DTORQUE_APP_NAME=Demo -DTORQUE_DEDICATED=ON
+
 
 ---
 
