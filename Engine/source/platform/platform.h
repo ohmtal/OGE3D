@@ -50,6 +50,7 @@
 #include <new>
 #include <typeinfo>
 
+inline bool g_IsDedicated = false;
 /// Global processor identifiers.
 ///
 /// @note These enums must be globally scoped so that they work with the inline assembly

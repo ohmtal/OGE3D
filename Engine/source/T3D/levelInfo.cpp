@@ -343,7 +343,7 @@ void LevelInfo::_updateSceneGraph()
    // enable it via the appropriate light manager
    // (Basic lighting doesn't do anything different right now)
 #ifndef TORQUE_DEDICATED
-   if(isClientObject())
+   if(isClientObject() && !g_IsDedicated)
       _onLMActivate(LIGHTMGR->getId(), true);
 #endif
 

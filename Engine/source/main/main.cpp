@@ -300,15 +300,14 @@ extern "C" { int AmdPowerXpressRequestHighPerformance = 1; }
 // will need to merge against future changes to the SML code if you do this.
 S32 TorqueMain(S32 argc, const char **argv)
 {
-   // Some handy debugging code:
-   //   if (argc == 1) {
-   //      static const char* argvFake[] = { "dtest.exe", "-jload", "test.jrn" };
-   //      argc = 3;
-   //      argv = argvFake;
-   //   }
 
-   //   Memory::enableLogging("testMem.log");
-   //   Memory::setBreakAlloc(104717);
+  //NOTE XXTH 20260314 need to hande dedicated here !!
+      for (S32 i = 1; i < argc; i++) {
+            if (strcmp(argv[i], "-dedicated") == 0) {
+                  // Con::setBoolVariable("$isDedicated", true);
+                  g_IsDedicated = true;
+            }
+      }
 
    // Initialize the subsystems.
    StandardMainLoop::init();

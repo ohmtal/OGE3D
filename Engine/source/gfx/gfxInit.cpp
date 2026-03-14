@@ -112,7 +112,11 @@ void GFXInit::init()
       return;
    doneOnce = true;
    
+
    Con::printf( "GFX Init:" );
+   if (g_IsDedicated ) Con::printf( "\tDedicated init!" );
+
+
 
    //find our adapters
    Vector<GFXAdapter*> adapters( __FILE__, __LINE__ );
@@ -363,9 +367,15 @@ S32 GFXInit::getAdapterCount()
 
 void GFXInit::getAdapters(Vector<GFXAdapter*> *adapters)
 {
-   adapters->clear();
-   for (U32 k = 0; k < smAdapters.size(); k++)
-      adapters->push_back(smAdapters[k]);
+      //XXTH dedicated
+      adapters->clear();
+      for (U32 k = 0; k < smAdapters.size(); k++) {
+            if ( !g_IsDedicated || smAdapters[k]->mType == NullDevice)  {
+               adapters->push_back(smAdapters[k]);
+            }
+
+      }
+
 }
 
 GFXVideoMode GFXInit::getDesktopResolution()

@@ -41,7 +41,7 @@ void Platform::init()
    
 #ifndef TORQUE_DEDICATED
    // if we're not dedicated do more initialization
-   InitWindowingSystem();
+   if (!g_IsDedicated) InitWindowingSystem();
 #endif
 }
 

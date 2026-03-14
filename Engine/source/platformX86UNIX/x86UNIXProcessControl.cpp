@@ -86,6 +86,7 @@ void Cleanup(bool minimal)
    StdConsole::destroy();
 
 #ifndef TORQUE_DEDICATED   
+   //mhh why ?  if (!g_IsDedicated)
    SDL_Quit();
 #endif
 }
