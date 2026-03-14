@@ -4,6 +4,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#include <stdint.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <cmath>
