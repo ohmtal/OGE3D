@@ -57,6 +57,8 @@ IMPLEMENT_CONOBJECT(ImGuiCtrl);
 bool ImGuiCtrl::smGlobalImGuiInitialized = false;
 //-----------------------------------------------------------------------------
 bool ImGuiCtrl::Initialize(){
+    #ifndef TORQUE_DEDIVATED // :/
+
     if (smGlobalImGuiInitialized && mGuiIO) {
         return true;
     };
@@ -147,6 +149,10 @@ bool ImGuiCtrl::Initialize(){
     smGlobalImGuiInitialized = true;
 
     return true;
+    #else
+    return false;
+    #endif
+
 }
 
 //-----------------------------------------------------------------------------
