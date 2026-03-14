@@ -226,9 +226,11 @@ class DisplayPtrManager
       Display* openDisplay()
       {
 #ifndef TORQUE_DEDICATED
-         mDisplay = XOpenDisplay(NULL);
-         if (mDisplay != NULL)
-            mOpenedDisplay = true;
+        if (!g_IsDedicated) {
+            mDisplay = XOpenDisplay(NULL);
+            if (mDisplay != NULL)
+                mOpenedDisplay = true;
+        }
 #endif
          return mDisplay;
       }
@@ -238,9 +240,11 @@ class DisplayPtrManager
          if (mOpenedDisplay)
          {
 #ifndef TORQUE_DEDICATED
-            XCloseDisplay(mDisplay);
-            mDisplay = NULL;
-            mOpenedDisplay = false;
+            if (!g_IsDedicated) {
+                XCloseDisplay(mDisplay);
+                mDisplay = NULL;
+                mOpenedDisplay = false;
+            }
 #endif
          }
       }
