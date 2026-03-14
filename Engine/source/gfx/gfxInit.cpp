@@ -394,6 +394,7 @@ GFXVideoMode GFXInit::getDesktopResolution()
 
 void GFXInit::enumerateAdapters() 
 {
+
    // Call each device class and have it report any adapters it supports.
    if(smAdapters.size())
    {

@@ -68,6 +68,12 @@ void EnumerateVideoModes(Vector<GFXVideoMode>& outModes)
 
 void GFXGLDevice::enumerateAdapters( Vector<GFXAdapter*> &adapterList )
 {
+    //XXTH TEST !!
+    if (g_IsDedicated)
+        return;
+
+
+
    AssertFatal( SDL_WasInit(SDL_INIT_VIDEO), "");
 
    PlatformGL::init(); // for hints about context creation
